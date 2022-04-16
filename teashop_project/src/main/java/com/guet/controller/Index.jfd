@@ -60,6 +60,16 @@ new FormModel {
 				"width": 95
 				"height": 40
 			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "addProduct"
+				"text": "添加"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "addProductActionPerformed", true ) )
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"x": 950
+				"y": 140
+				"width": 95
+				"height": 40
+			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )
 			"size": new java.awt.Dimension( 1490, 795 )

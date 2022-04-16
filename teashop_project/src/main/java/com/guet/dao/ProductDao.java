@@ -8,4 +8,6 @@ public interface ProductDao {
     List<Tea> selectAllProducts();
 
     List<Tea> selectSomeProducts(String str);
+
+    int insertProduct(Tea tea);
 }

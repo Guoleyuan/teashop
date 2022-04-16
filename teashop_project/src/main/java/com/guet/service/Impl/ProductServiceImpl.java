@@ -31,4 +31,20 @@ public class ProductServiceImpl implements ProductService {
         List<Tea> list = productDao.selectSomeProducts(str);
         return  list;
     }
+
+    /**
+     * 插入奶茶数据
+     * 如果插入成功，返回1  如果插入失败 返回0
+     * @param tea
+     * @return
+     */
+    @Override
+    public int insertProduct(Tea tea) {
+        int i = productDao.insertProduct(tea);
+        if (i==1){
+            return 1;
+        }else {
+            return 0;
+        }
+    }
 }

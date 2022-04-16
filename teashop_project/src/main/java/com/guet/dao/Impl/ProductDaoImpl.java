@@ -76,4 +76,23 @@ public class ProductDaoImpl implements ProductDao {
         }
         return list;
     }
+
+    @Override
+    public int insertProduct(Tea tea) {
+        try {
+            conn = ConnUtil.getConn();
+            String sql="INSERT INTO tea(tea_name,tea_amount,tea_price,tea_category,tea_discount)" +
+                    "values(?,?,?,?,?)";
+            psm=conn.prepareStatement(sql);
+            psm.setString(1,tea.getTeaName());
+            psm.setInt(2,tea.getTeaAmount());
+            psm.setDouble(3,tea.getTeaPrice());
+            psm.setString(4,tea.getTeaCategory());
+            psm.setDouble(5,tea.getTeaDiscount());
+            psm.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 1;
+    }
 }
