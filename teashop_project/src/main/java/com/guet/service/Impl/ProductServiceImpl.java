@@ -20,4 +20,15 @@ public class ProductServiceImpl implements ProductService {
         List<Tea> list = productDao.selectAllProducts();
         return list;
     }
+
+    /**
+     * 模糊查询所有带关键字的产品
+     * @param str
+     * @return
+     */
+    @Override
+    public List<Tea> selectSomeProducts(String str) {
+        List<Tea> list = productDao.selectSomeProducts(str);
+        return  list;
+    }
 }

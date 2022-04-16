@@ -17,4 +17,6 @@ public interface ProductService {
     //     a[i][2]=tea.getTeaAmount();
     //     a[i][3]=tea.getTeaPrice();
     //     a[i][4]=tea.getTeaCategory();
+
+    List<Tea> selectSomeProducts(String str);
 }

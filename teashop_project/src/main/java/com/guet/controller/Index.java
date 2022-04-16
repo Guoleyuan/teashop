@@ -2,6 +2,7 @@
  * Created by JFormDesigner on Thu Apr 14 20:03:26 CST 2022
  */
 package com.guet.controller;
+import java.awt.event.*;
 import com.guet.entity.Tea;
 import com.guet.service.Impl.ProductServiceImpl;
 import com.guet.service.ProductService;
@@ -56,18 +57,60 @@ public class Index extends JFrame {
         table.invalidate();
     }
 
+    /**
+     * 按照关键字查询文本框的获得焦点的事件，把文本框的内容删除
+     * @param e
+     */
+    private void textField1FocusGained(FocusEvent e) {
+        // TODO add your code here
+    }
+
+    /**
+     * 按照关键字查询文本框的失去焦点的事件，把文本框的内容删除
+     * @param e
+     */
+    private void textField1FocusLost(FocusEvent e) {
+        // TODO add your code here
+    }
+
+    /**
+     * 输入关键字搜索相关内容
+     * 例如：搜索奶茶要搜索到所有带奶茶的产品
+     * @param e
+     */
+    private void searchSomeActionPerformed(ActionEvent e) {
+        // TODO add your code here
+        //清空数据
+        dmt.setRowCount(0);
+        // TODO add your code here
+        //查询所有的产品
+        List<Tea> list = productService.selectSomeProducts(textField1.getText());
+        //把查到的数据放入到table中
+
+        Object[][] obj = new Object[list.size()][coin.length];
+        for (int i = 0; i < list.size(); i++) {
+            // dmt=new DefaultTableModel(obj,coin);
+            Tea tea = list.get(i);
+            obj[i][0]=tea.getTeaId();
+            obj[i][1]=tea.getTeaName();
+            obj[i][2]=tea.getTeaDiscount();
+            obj[i][3]=tea.getTeaPrice();
+            obj[i][4]=tea.getTeaCategory();
+            obj[i][5]=tea.getTeaAmount();
+            dmt.addRow(obj[i]);
+        }
+        table.setModel(dmt);
+        table.invalidate();
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         label1 = new JLabel();
         scrollPane1 = new JScrollPane();
-        table = new JTable(dmt){
-            //设置表格的单元格不可编辑
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false;
-            }
-        };
+        table = new JTable();
         searchAll = new JButton();
+        textField1 = new JTextField();
+        searchSome = new JButton();
 
         //======== this ========
         setIconImage(new ImageIcon(getClass().getResource("/imgs/logo.jpg")).getImage());
@@ -94,6 +137,26 @@ public class Index extends JFrame {
         contentPane.add(searchAll);
         searchAll.setBounds(950, 30, 95, 40);
 
+        //---- textField1 ----
+        textField1.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                textField1FocusGained(e);
+            }
+            @Override
+            public void focusLost(FocusEvent e) {
+                textField1FocusLost(e);
+            }
+        });
+        contentPane.add(textField1);
+        textField1.setBounds(1150, 30, 155, 40);
+
+        //---- searchSome ----
+        searchSome.setText("\u67e5\u8be2");
+        searchSome.addActionListener(e -> searchSomeActionPerformed(e));
+        contentPane.add(searchSome);
+        searchSome.setBounds(1320, 30, 95, 40);
+
         contentPane.setPreferredSize(new Dimension(1490, 795));
         pack();
         setLocationRelativeTo(getOwner());
@@ -109,6 +172,8 @@ public class Index extends JFrame {
     private JScrollPane scrollPane1;
     private JTable table;
     private JButton searchAll;
+    private JTextField textField1;
+    private JButton searchSome;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
     public static void main(String[] args) {
         Index index = new Index();
