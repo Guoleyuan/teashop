@@ -15,7 +15,6 @@ import java.util.List;
 /**
  * @author 1
  */
-
 public class Index extends JFrame {
 
     String[]coin={"编号","奶茶","折扣","单价","奶茶品种","剩余数量"};
@@ -32,7 +31,7 @@ public class Index extends JFrame {
      * 点击查询按钮  查出所有的数据
      * @param e
      */
-    public void searchAllActionPerformed(ActionEvent e) {
+    private void searchAllActionPerformed(ActionEvent e) {
 
         //清空数据
         dmt.setRowCount(0);
@@ -105,8 +104,7 @@ public class Index extends JFrame {
     }
 
     /**
-     * 添加奶茶
-     * 跳转到添加奶茶的界面
+     * 点击添加之后的功能
      * @param e
      */
     private void addProductActionPerformed(ActionEvent e) {
@@ -182,7 +180,6 @@ public class Index extends JFrame {
         this.setVisible(true);
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.setResizable(false);
-        this.setLocationByPlatform(true);
     }
 
 
@@ -197,6 +194,7 @@ public class Index extends JFrame {
     // JFormDesigner - End of variables declaration  //GEN-END:variables
     public static void main(String[] args) {
         Index index = new Index();
+
     }
 
 
