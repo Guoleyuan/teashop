@@ -28,7 +28,7 @@ new FormModel {
 				"x": 330
 				"y": 0
 				"width": 575
-				"height": 765
+				"height": 335
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "searchAll"
@@ -69,6 +69,47 @@ new FormModel {
 				"y": 140
 				"width": 95
 				"height": 40
+			} )
+			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+				name: "scrollPane2"
+				add( new FormComponent( "javax.swing.JTable" ) {
+					name: "preOrderTable"
+				} )
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"x": 330
+				"y": 400
+				"width": 570
+				"height": 190
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "addShopCart"
+				"text": "加入购物车"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "addShopCartActionPerformed", true ) )
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"x": 905
+				"y": 280
+				"width": 130
+				"height": 55
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label2"
+				"text": "总价钱："
+				"font": new java.awt.Font( "Microsoft YaHei UI", 0, 28 )
+				"foreground": new java.awt.Color( 255, 0, 0, 255 )
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"x": 605
+				"y": 600
+				"width": 120
+				"height": 40
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label3"
+				"text": "text"
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"x": 720
+				"y": 605
+				"width": 170
+				"height": 45
 			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )

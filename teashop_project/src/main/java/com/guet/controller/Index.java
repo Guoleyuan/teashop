@@ -10,6 +10,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,8 +18,10 @@ import java.util.List;
  */
 public class Index extends JFrame {
 
-    String[]coin={"编号","奶茶","折扣","单价","奶茶品种","剩余数量"};
-    DefaultTableModel dmt= new DefaultTableModel(null,coin);
+    String[]coin;
+    DefaultTableModel dmt;
+    //添加到购物车使用的list
+    List<Tea> shopCardList = new ArrayList<>();
 
     private ProductService productService=new ProductServiceImpl();
 
@@ -33,6 +36,8 @@ public class Index extends JFrame {
      */
     private void searchAllActionPerformed(ActionEvent e) {
 
+        coin= new String[]{"编号", "奶茶", "折扣", "单价（元）", "奶茶品种", "剩余数量（杯）"};
+        dmt= new DefaultTableModel(null,coin);
         //清空数据
         dmt.setRowCount(0);
 
@@ -79,6 +84,8 @@ public class Index extends JFrame {
      * @param e
      */
     private void searchSomeActionPerformed(ActionEvent e) {
+        coin= new String[]{"编号", "奶茶", "折扣", "单价（元）", "奶茶品种", "剩余数量（杯）"};
+        dmt= new DefaultTableModel(null,coin);
         // TODO add your code here
         //清空数据
         dmt.setRowCount(0);
@@ -112,6 +119,47 @@ public class Index extends JFrame {
         new AddProduct();
     }
 
+    /**
+     * 点击加入购物车之后  把数据放入到欲购买表格中，购物车功能
+     * @param e
+     */
+    private void addShopCartActionPerformed(ActionEvent e) {
+        // TODO add your code here
+        int index1 = table.getSelectedRow();//获取选中行
+        Tea tea = new Tea();
+        tea.setTeaName((String) table.getValueAt(index1,1));
+        tea.setTeaDiscount((Double) table.getValueAt(index1,2));
+        tea.setTeaPrice((Double) table.getValueAt(index1,3));
+        // System.out.println(tea);
+        shopCardList.add(tea);
+
+        //把list数据放入到preOrderTable中
+        coin= new String[]{"产品名称","折扣", "单价(元)"};
+
+        dmt= new DefaultTableModel(null,coin);
+        //清空数据
+        dmt.setRowCount(0);
+        Double price=0.00;
+        Object[][] obj = new Object[shopCardList.size()][coin.length];
+        for (int i = 0; i < shopCardList.size(); i++) {
+            // dmt=new DefaultTableModel(obj,coin);
+            Tea tea1 = shopCardList.get(i);
+            obj[i][0]=tea1.getTeaName();
+            obj[i][1]= tea1.getTeaDiscount();
+            obj[i][2]=tea1.getTeaPrice();
+            dmt.addRow(obj[i]);
+            Double teaDiscount = tea1.getTeaDiscount();
+            double teaPrice = tea1.getTeaPrice();
+            price+=teaPrice*teaDiscount;
+            label3.setText(String.valueOf(price).substring(0,4));
+            label3.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 28));
+            label3.setForeground(Color.red);
+
+        }
+        preOrderTable.setModel(dmt);
+        preOrderTable.invalidate();
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         label1 = new JLabel();
@@ -121,6 +169,11 @@ public class Index extends JFrame {
         textField1 = new JTextField();
         searchSome = new JButton();
         addProduct = new JButton();
+        scrollPane2 = new JScrollPane();
+        preOrderTable = new JTable();
+        addShopCart = new JButton();
+        label2 = new JLabel();
+        label3 = new JLabel();
 
         //======== this ========
         setIconImage(new ImageIcon(getClass().getResource("/imgs/logo.jpg")).getImage());
@@ -139,7 +192,7 @@ public class Index extends JFrame {
             scrollPane1.setViewportView(table);
         }
         contentPane.add(scrollPane1);
-        scrollPane1.setBounds(330, 0, 575, 765);
+        scrollPane1.setBounds(330, 0, 575, 335);
 
         //---- searchAll ----
         searchAll.setText("\u67e5\u8be2\u5168\u90e8");
@@ -173,6 +226,31 @@ public class Index extends JFrame {
         contentPane.add(addProduct);
         addProduct.setBounds(950, 140, 95, 40);
 
+        //======== scrollPane2 ========
+        {
+            scrollPane2.setViewportView(preOrderTable);
+        }
+        contentPane.add(scrollPane2);
+        scrollPane2.setBounds(330, 400, 570, 190);
+
+        //---- addShopCart ----
+        addShopCart.setText("\u52a0\u5165\u8d2d\u7269\u8f66");
+        addShopCart.addActionListener(e -> addShopCartActionPerformed(e));
+        contentPane.add(addShopCart);
+        addShopCart.setBounds(905, 280, 130, 55);
+
+        //---- label2 ----
+        label2.setText("\u603b\u4ef7\u94b1\uff1a");
+        label2.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 28));
+        label2.setForeground(Color.red);
+        contentPane.add(label2);
+        label2.setBounds(605, 600, 120, 40);
+
+        //---- label3 ----
+        label3.setText(" ");
+        contentPane.add(label3);
+        label3.setBounds(720, 605, 170, 45);
+
         contentPane.setPreferredSize(new Dimension(1490, 795));
         pack();
         setLocationRelativeTo(getOwner());
@@ -191,6 +269,11 @@ public class Index extends JFrame {
     private JTextField textField1;
     private JButton searchSome;
     private JButton addProduct;
+    private JScrollPane scrollPane2;
+    private JTable preOrderTable;
+    private JButton addShopCart;
+    private JLabel label2;
+    private JLabel label3;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
     public static void main(String[] args) {
         Index index = new Index();
