@@ -127,6 +127,7 @@ public class Index extends JFrame {
         // TODO add your code here
         int index1 = table.getSelectedRow();//获取选中行
         Tea tea = new Tea();
+
         tea.setTeaName((String) table.getValueAt(index1,1));
         tea.setTeaDiscount((Double) table.getValueAt(index1,2));
         tea.setTeaPrice((Double) table.getValueAt(index1,3));
@@ -149,15 +150,31 @@ public class Index extends JFrame {
             obj[i][2]=tea1.getTeaPrice();
             dmt.addRow(obj[i]);
             Double teaDiscount = tea1.getTeaDiscount();
-            double teaPrice = tea1.getTeaPrice();
+            float teaPrice = (float) tea1.getTeaPrice();
             price+=teaPrice*teaDiscount;
-            label3.setText(String.valueOf(price).substring(0,4));
-            label3.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 28));
-            label3.setForeground(Color.red);
+            label3.setText(String.valueOf(price)+"元");
 
         }
         preOrderTable.setModel(dmt);
         preOrderTable.invalidate();
+    }
+
+    /**
+     * 购物车结算功能，把购物车的东西存放到当前正在进行的table中，显示出当前正在进行的订单
+     * @param e
+     */
+    private void payButtonActionPerformed(ActionEvent e) {
+        // TODO add your code here
+        //1.清空购物车的表格内容
+        //2.将数据创建订单并且显示到当前订单orderTable中，显示status状态为0的，当点击完成订单之后，status转换为0，再刷新一下
+
+        //把list数据放入到preOrderTable中
+        coin= new String[]{"订单号","商品名称", "总价钱(元)"};
+
+        dmt= new DefaultTableModel(null,coin);
+        //清空数据
+        dmt.setRowCount(0);
+
     }
 
     private void initComponents() {
@@ -174,6 +191,10 @@ public class Index extends JFrame {
         addShopCart = new JButton();
         label2 = new JLabel();
         label3 = new JLabel();
+        payButton = new JButton();
+        scrollPane3 = new JScrollPane();
+        orderTable = new JTable();
+        finishOrderButton = new JButton();
 
         //======== this ========
         setIconImage(new ImageIcon(getClass().getResource("/imgs/logo.jpg")).getImage());
@@ -198,7 +219,7 @@ public class Index extends JFrame {
         searchAll.setText("\u67e5\u8be2\u5168\u90e8");
         searchAll.addActionListener(e -> searchAllActionPerformed(e));
         contentPane.add(searchAll);
-        searchAll.setBounds(950, 30, 95, 40);
+        searchAll.setBounds(340, 350, 95, 40);
 
         //---- textField1 ----
         textField1.addFocusListener(new FocusAdapter() {
@@ -212,19 +233,19 @@ public class Index extends JFrame {
             }
         });
         contentPane.add(textField1);
-        textField1.setBounds(1150, 30, 155, 40);
+        textField1.setBounds(915, 10, 155, 40);
 
         //---- searchSome ----
         searchSome.setText("\u67e5\u8be2");
         searchSome.addActionListener(e -> searchSomeActionPerformed(e));
         contentPane.add(searchSome);
-        searchSome.setBounds(1320, 30, 95, 40);
+        searchSome.setBounds(1080, 10, 95, 40);
 
         //---- addProduct ----
         addProduct.setText("\u6dfb\u52a0");
         addProduct.addActionListener(e -> addProductActionPerformed(e));
         contentPane.add(addProduct);
-        addProduct.setBounds(950, 140, 95, 40);
+        addProduct.setBounds(460, 350, 95, 40);
 
         //======== scrollPane2 ========
         {
@@ -237,7 +258,7 @@ public class Index extends JFrame {
         addShopCart.setText("\u52a0\u5165\u8d2d\u7269\u8f66");
         addShopCart.addActionListener(e -> addShopCartActionPerformed(e));
         contentPane.add(addShopCart);
-        addShopCart.setBounds(905, 280, 130, 55);
+        addShopCart.setBounds(640, 340, 130, 55);
 
         //---- label2 ----
         label2.setText("\u603b\u4ef7\u94b1\uff1a");
@@ -251,7 +272,25 @@ public class Index extends JFrame {
         contentPane.add(label3);
         label3.setBounds(720, 605, 170, 45);
 
-        contentPane.setPreferredSize(new Dimension(1490, 795));
+        //---- payButton ----
+        payButton.setText("\u7ed3\u7b97");
+        payButton.addActionListener(e -> payButtonActionPerformed(e));
+        contentPane.add(payButton);
+        payButton.setBounds(370, 605, 135, 50);
+
+        //======== scrollPane3 ========
+        {
+            scrollPane3.setViewportView(orderTable);
+        }
+        contentPane.add(scrollPane3);
+        scrollPane3.setBounds(930, 100, 630, 315);
+
+        //---- finishOrderButton ----
+        finishOrderButton.setText("\u5b8c\u6210\u8ba2\u5355");
+        contentPane.add(finishOrderButton);
+        finishOrderButton.setBounds(1440, 435, 125, 50);
+
+        contentPane.setPreferredSize(new Dimension(1590, 795));
         pack();
         setLocationRelativeTo(getOwner());
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
@@ -274,6 +313,10 @@ public class Index extends JFrame {
     private JButton addShopCart;
     private JLabel label2;
     private JLabel label3;
+    private JButton payButton;
+    private JScrollPane scrollPane3;
+    private JTable orderTable;
+    private JButton finishOrderButton;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
     public static void main(String[] args) {
         Index index = new Index();
