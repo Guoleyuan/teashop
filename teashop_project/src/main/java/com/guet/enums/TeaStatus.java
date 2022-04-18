@@ -5,13 +5,11 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum TeaCategory {
+public enum TeaStatus {
 
-    MIKETEA("奶茶"),
+    WAIT("待处理订单"),
 
-    JUICE("果汁"),
-
-    COFFEE("咖啡");
+    HISTORY("历史订单");
 
 
 

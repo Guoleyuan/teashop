@@ -2,14 +2,17 @@
  * Created by JFormDesigner on Thu Apr 14 20:03:26 CST 2022
  */
 package com.guet.controller;
-import java.awt.event.*;
+
 import com.guet.entity.Tea;
 import com.guet.service.Impl.ProductServiceImpl;
 import com.guet.service.ProductService;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +24,13 @@ public class Index extends JFrame {
     String[]coin;
     DefaultTableModel dmt;
     //添加到购物车使用的list
-    List<Tea> shopCardList = new ArrayList<>();
+    List<Tea> shopCardList= new ArrayList<>();
+    //存放order的list
+    List<List<Tea>> orderList=new ArrayList<>();
+
+    //结算按钮的点击次数
+    int payButtonNum;
+    int finishButtonNum;
 
     private ProductService productService=new ProductServiceImpl();
 
@@ -153,10 +162,26 @@ public class Index extends JFrame {
             float teaPrice = (float) tea1.getTeaPrice();
             price+=teaPrice*teaDiscount;
             label3.setText(String.valueOf(price)+"元");
-
         }
         preOrderTable.setModel(dmt);
         preOrderTable.invalidate();
+    }
+
+    /**
+     * 清空购物车的list数据
+     */
+    public void clearShopCardList(){
+
+        List<Tea> objects = new ArrayList<>(shopCardList);
+        orderList.add(objects);
+        //把list数据放入到preOrderTable中
+        coin= new String[]{"产品名称","折扣", "单价(元)"};
+        dmt= new DefaultTableModel(null,coin);
+        //清空数据
+        dmt.setRowCount(0);
+        preOrderTable.setModel(dmt);
+        preOrderTable.invalidate();
+        shopCardList.clear();
     }
 
     /**
@@ -164,17 +189,33 @@ public class Index extends JFrame {
      * @param e
      */
     private void payButtonActionPerformed(ActionEvent e) {
+        payButtonNum++;
         // TODO add your code here
         //1.清空购物车的表格内容
         //2.将数据创建订单并且显示到当前订单orderTable中，显示status状态为0的，当点击完成订单之后，status转换为0，再刷新一下
-
         //把list数据放入到preOrderTable中
-        coin= new String[]{"订单号","商品名称", "总价钱(元)"};
-
+        coin= new String[]{"订单号","商品名称", "总价钱(元)","订单状态"};
         dmt= new DefaultTableModel(null,coin);
+
         //清空数据
         dmt.setRowCount(0);
 
+        Object[][] obj = new Object[payButtonNum-finishButtonNum][coin.length];
+
+        orderTable.setModel(dmt);
+        orderTable.invalidate();
+        //把与订单表初始化
+        clearShopCardList();
+        System.out.println(orderList);
+    }
+
+    /**
+     * 订单完成按钮，点击订单完成，把数据库订单表的status字段改为1，成为历史订单。
+     * @param e
+     */
+    private void finishOrderButtonActionPerformed(ActionEvent e) {
+        finishButtonNum++;
+        // TODO add your code here
     }
 
     private void initComponents() {
@@ -268,7 +309,7 @@ public class Index extends JFrame {
         label2.setBounds(605, 600, 120, 40);
 
         //---- label3 ----
-        label3.setText(" ");
+        label3.setText("text");
         contentPane.add(label3);
         label3.setBounds(720, 605, 170, 45);
 
@@ -287,6 +328,7 @@ public class Index extends JFrame {
 
         //---- finishOrderButton ----
         finishOrderButton.setText("\u5b8c\u6210\u8ba2\u5355");
+        finishOrderButton.addActionListener(e -> finishOrderButtonActionPerformed(e));
         contentPane.add(finishOrderButton);
         finishOrderButton.setBounds(1440, 435, 125, 50);
 
