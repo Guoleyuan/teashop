@@ -77,7 +77,7 @@ new FormModel {
 				} )
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"x": 330
-				"y": 400
+				"y": 480
 				"width": 570
 				"height": 190
 			} )
@@ -98,16 +98,19 @@ new FormModel {
 				"foreground": new java.awt.Color( 255, 0, 0, 255 )
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"x": 605
-				"y": 600
+				"y": 675
 				"width": 120
 				"height": 40
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "label3"
-				"text": "text"
+				"text": " "
+				"font": new java.awt.Font( "Microsoft YaHei UI", 0, 24 )
+				"background": new java.awt.Color( 255, 255, 255, 255 )
+				"foreground": new java.awt.Color( 255, 51, 51, 255 )
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"x": 720
-				"y": 605
+				"y": 675
 				"width": 170
 				"height": 45
 			} )
@@ -116,8 +119,8 @@ new FormModel {
 				"text": "结算"
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "payButtonActionPerformed", true ) )
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
-				"x": 370
-				"y": 605
+				"x": 360
+				"y": 670
 				"width": 135
 				"height": 50
 			} )
@@ -141,6 +144,28 @@ new FormModel {
 				"y": 435
 				"width": 125
 				"height": 50
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label4"
+				"text": "购物车："
+				"font": new java.awt.Font( "Microsoft YaHei UI", 0, 28 )
+				"foreground": new java.awt.Color( 51, 51, 255, 255 )
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"x": 335
+				"y": 410
+				"width": 135
+				"height": 70
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label5"
+				"text": "当前订单"
+				"font": new java.awt.Font( "Microsoft YaHei UI", 0, 28 )
+				"foreground": new java.awt.Color( 51, 255, 102, 255 )
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"x": 1425
+				"y": 50
+				"width": 130
+				"height": 45
 			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )

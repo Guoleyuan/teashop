@@ -4,8 +4,10 @@
 package com.guet.controller;
 
 import com.guet.entity.Tea;
+import com.guet.enums.TeaStatus;
 import com.guet.service.Impl.ProductServiceImpl;
 import com.guet.service.ProductService;
+import com.guet.util.TimeNumberUtils;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -149,7 +151,7 @@ public class Index extends JFrame {
         dmt= new DefaultTableModel(null,coin);
         //清空数据
         dmt.setRowCount(0);
-        Double price=0.00;
+        float price=0;
         Object[][] obj = new Object[shopCardList.size()][coin.length];
         for (int i = 0; i < shopCardList.size(); i++) {
             // dmt=new DefaultTableModel(obj,coin);
@@ -190,6 +192,9 @@ public class Index extends JFrame {
      */
     private void payButtonActionPerformed(ActionEvent e) {
         payButtonNum++;
+        //把与订单表初始化
+        clearShopCardList();
+        //获取了orderList  把购物车的东西加入到当前订单中
         // TODO add your code here
         //1.清空购物车的表格内容
         //2.将数据创建订单并且显示到当前订单orderTable中，显示status状态为0的，当点击完成订单之后，status转换为0，再刷新一下
@@ -201,12 +206,22 @@ public class Index extends JFrame {
         dmt.setRowCount(0);
 
         Object[][] obj = new Object[payButtonNum-finishButtonNum][coin.length];
-
+        for (int i = 0; i <payButtonNum-finishButtonNum ; i++) {
+            List<Tea> list = orderList.get(i);
+            List<String> name = new ArrayList<>();
+            for (Tea tea : list) {
+                name.add(tea.getTeaName());
+            }
+            obj[i][0]= TimeNumberUtils.getLocalTrmSeqNum();
+            obj[i][1]= name;
+            obj[i][2]= TimeNumberUtils.getLocalTrmSeqNum();
+            obj[i][3]= TeaStatus.WAIT.getType();
+            dmt.addRow(obj[i]);
+        }
         orderTable.setModel(dmt);
         orderTable.invalidate();
-        //把与订单表初始化
-        clearShopCardList();
-        System.out.println(orderList);
+        //把购物车的总价钱设置为0
+        label3.setText(" ");
     }
 
     /**
@@ -236,6 +251,8 @@ public class Index extends JFrame {
         scrollPane3 = new JScrollPane();
         orderTable = new JTable();
         finishOrderButton = new JButton();
+        label4 = new JLabel();
+        label5 = new JLabel();
 
         //======== this ========
         setIconImage(new ImageIcon(getClass().getResource("/imgs/logo.jpg")).getImage());
@@ -293,7 +310,7 @@ public class Index extends JFrame {
             scrollPane2.setViewportView(preOrderTable);
         }
         contentPane.add(scrollPane2);
-        scrollPane2.setBounds(330, 400, 570, 190);
+        scrollPane2.setBounds(330, 480, 570, 190);
 
         //---- addShopCart ----
         addShopCart.setText("\u52a0\u5165\u8d2d\u7269\u8f66");
@@ -306,18 +323,21 @@ public class Index extends JFrame {
         label2.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 28));
         label2.setForeground(Color.red);
         contentPane.add(label2);
-        label2.setBounds(605, 600, 120, 40);
+        label2.setBounds(605, 675, 120, 40);
 
         //---- label3 ----
-        label3.setText("text");
+        label3.setText(" ");
+        label3.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 24));
+        label3.setBackground(Color.white);
+        label3.setForeground(new Color(255, 51, 51));
         contentPane.add(label3);
-        label3.setBounds(720, 605, 170, 45);
+        label3.setBounds(720, 675, 170, 45);
 
         //---- payButton ----
         payButton.setText("\u7ed3\u7b97");
         payButton.addActionListener(e -> payButtonActionPerformed(e));
         contentPane.add(payButton);
-        payButton.setBounds(370, 605, 135, 50);
+        payButton.setBounds(360, 670, 135, 50);
 
         //======== scrollPane3 ========
         {
@@ -331,6 +351,20 @@ public class Index extends JFrame {
         finishOrderButton.addActionListener(e -> finishOrderButtonActionPerformed(e));
         contentPane.add(finishOrderButton);
         finishOrderButton.setBounds(1440, 435, 125, 50);
+
+        //---- label4 ----
+        label4.setText("\u8d2d\u7269\u8f66\uff1a");
+        label4.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 28));
+        label4.setForeground(new Color(51, 51, 255));
+        contentPane.add(label4);
+        label4.setBounds(335, 410, 135, 70);
+
+        //---- label5 ----
+        label5.setText("\u5f53\u524d\u8ba2\u5355");
+        label5.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 28));
+        label5.setForeground(new Color(51, 255, 102));
+        contentPane.add(label5);
+        label5.setBounds(1425, 50, 130, 45);
 
         contentPane.setPreferredSize(new Dimension(1590, 795));
         pack();
@@ -359,6 +393,8 @@ public class Index extends JFrame {
     private JScrollPane scrollPane3;
     private JTable orderTable;
     private JButton finishOrderButton;
+    private JLabel label4;
+    private JLabel label5;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
     public static void main(String[] args) {
         Index index = new Index();
