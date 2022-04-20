@@ -95,4 +95,10 @@ public class ProductDaoImpl implements ProductDao {
         }
         return 1;
     }
+
+    public static void main(String[] args) {
+        ProductDaoImpl productDao = new ProductDaoImpl();
+        List<Tea> list = productDao.selectAllProducts();
+        list.forEach(tea -> System.out.println(tea));
+    }
 }
