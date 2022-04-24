@@ -104,7 +104,7 @@ new FormModel {
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "label3"
-				"text": " "
+				"text": "     "
 				"font": new java.awt.Font( "Microsoft YaHei UI", 0, 24 )
 				"background": new java.awt.Color( 255, 255, 255, 255 )
 				"foreground": new java.awt.Color( 255, 51, 51, 255 )

@@ -7,5 +7,7 @@ public class Test {
         System.out.println(sql);
         String sqla="INSERT INTO tea() values(?,?,?,?,?)";
         System.out.println(sqla);
+
+
     }
 }

@@ -47,4 +47,19 @@ public class ProductServiceImpl implements ProductService {
             return 0;
         }
     }
+
+    /**
+     * 完成订单之后，对相应的数据库的奶茶数量减去1
+     * @param name
+     * @return
+     */
+    @Override
+    public int updateProductAmount(String name) {
+        int i = productDao.updateProductAmount(name);
+        if (i==1){
+            return 1;
+        }else {
+            return 0;
+        }
+    }
 }

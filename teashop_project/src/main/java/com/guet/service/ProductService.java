@@ -21,4 +21,6 @@ public interface ProductService {
     List<Tea> selectSomeProducts(String str);
 
     int insertProduct(Tea tea);
+
+    int updateProductAmount(String name);
 }

@@ -3,6 +3,7 @@
  */
 package com.guet.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.guet.entity.Order;
 import com.guet.entity.Tea;
 import com.guet.enums.TeaStatus;
@@ -10,6 +11,7 @@ import com.guet.service.Impl.OrderServiceImpl;
 import com.guet.service.Impl.ProductServiceImpl;
 import com.guet.service.OrderService;
 import com.guet.service.ProductService;
+import com.guet.util.MyTable;
 import com.guet.util.TimeNumberUtils;
 
 import javax.swing.*;
@@ -18,10 +20,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
+import java.util.*;
 import java.util.List;
 
 /**
@@ -36,6 +36,10 @@ public class Index extends JFrame {
     //存放order的list
     List<List<Tea>> orderList=new ArrayList<>();
 
+
+
+
+
     //结算按钮的点击次数
     int payButtonNum;
     int finishButtonNum;
@@ -47,6 +51,7 @@ public class Index extends JFrame {
 
     public Index() {
         initComponents();
+        searchAllActionPerformed();
     }
 
     /**
@@ -54,6 +59,38 @@ public class Index extends JFrame {
      * @param e
      */
     private void searchAllActionPerformed(ActionEvent e) {
+
+        coin= new String[]{"编号", "奶茶", "折扣", "单价（元）", "奶茶品种", "剩余数量（杯）"};
+        dmt= new DefaultTableModel(null,coin);
+        //清空数据
+        dmt.setRowCount(0);
+
+        // TODO add your code here
+        //查询所有的产品
+        List<Tea> list = productService.selectAllProduct();
+        //把查到的数据放入到table中
+
+        Object[][] obj = new Object[list.size()][coin.length];
+        for (int i = 0; i < list.size(); i++) {
+            // dmt=new DefaultTableModel(obj,coin);
+            Tea tea = list.get(i);
+            obj[i][0]=tea.getTeaId();
+            obj[i][1]=tea.getTeaName();
+            obj[i][2]=tea.getTeaDiscount();
+            obj[i][3]=tea.getTeaPrice();
+            obj[i][4]=tea.getTeaCategory();
+            obj[i][5]=tea.getTeaAmount();
+            dmt.addRow(obj[i]);
+        }
+        table.setModel(dmt);
+        table.invalidate();
+    }
+
+    /**
+     * 进主页面自动查询所有产品
+     * @param
+     */
+    private void searchAllActionPerformed() {
 
         coin= new String[]{"编号", "奶茶", "折扣", "单价（元）", "奶茶品种", "剩余数量（杯）"};
         dmt= new DefaultTableModel(null,coin);
@@ -183,8 +220,7 @@ public class Index extends JFrame {
      */
     public void clearShopCardList(){
 
-        List<Tea> objects = new ArrayList<>(shopCardList);
-        orderList.add(objects);
+        orderList.add(shopCardList);
         //把list数据放入到preOrderTable中
         coin= new String[]{"产品名称","折扣", "单价(元)"};
         dmt= new DefaultTableModel(null,coin);
@@ -193,86 +229,172 @@ public class Index extends JFrame {
         preOrderTable.setModel(dmt);
         preOrderTable.invalidate();
         shopCardList.clear();
+        label3.setText(" ");
     }
 
     /**
-     * 购物车结算功能，把购物车的东西存放到当前正在进行的table中，显示出当前正在进行的订单
+     * 结算按钮  把订单放入到数据库，订单状态为0  表示正在做
+     *
      * @param e
      */
     private void payButtonActionPerformed(ActionEvent e) {
-        payButtonNum++;
+        // payButtonNum++;
+        // System.out.println("点击的结算次数："+payButtonNum);
         //把与订单表初始化
-        clearShopCardList();
+        // clearShopCardList();
         //获取了orderList  把购物车的东西加入到当前订单中
         // TODO add your code here
         //1.清空购物车的表格内容
         //2.将数据创建订单并且显示到当前订单orderTable中，显示status状态为0的，当点击完成订单之后，status转换为0，再刷新一下
         //把list数据放入到preOrderTable中
-        coin= new String[]{"订单号","商品名称", "总价钱(元)","订单状态"};
-        dmt= new DefaultTableModel(null,coin);
+        // coin= new String[]{"订单号","商品名称", "总价钱(元)","订单状态"};
+        // dmt= new DefaultTableModel(null,coin);
 
         //清空数据
-        dmt.setRowCount(0);
+        // dmt.setRowCount(0);
 
+        // float price=0;
+        // Object[][] obj = new Object[payButtonNum-finishButtonNum][coin.length];
+        // System.out.println("当前订单的数量："+(payButtonNum-finishButtonNum));
+        // for (int i = 0; i <payButtonNum-finishButtonNum ; i++) {
+        //     List<Tea> list = orderList.get(i);
+        //     List<String> name = new ArrayList<>();
+        //     for (Tea tea : list) {
+        //         name.add(tea.getTeaName());
+        //         Double teaDiscount = tea.getTeaDiscount();
+        //         float teaPrice = (float) tea.getTeaPrice();
+        //         price+=teaPrice*teaDiscount;
+        //     }
+        //     obj[i][0]= TimeNumberUtils.getLocalTrmSeqNum();
+        //     obj[i][1]= name;
+        //     obj[i][2]= price;
+        //     price=0;
+        //     obj[i][3]= TeaStatus.WAIT.getType();
+        //     dmt.addRow(obj[i]);
+        // }
+        // orderTable.setModel(dmt);
+        // orderTable.invalidate();
+        //把购物车的总价钱设置为0
+        // label3.setText(" ");
+        Order order = new Order();
         float price=0;
-        Object[][] obj = new Object[payButtonNum-finishButtonNum][coin.length];
-        for (int i = 0; i <payButtonNum-finishButtonNum ; i++) {
-            List<Tea> list = orderList.get(i);
-            List<String> name = new ArrayList<>();
-            for (Tea tea : list) {
-                name.add(tea.getTeaName());
-                Double teaDiscount = tea.getTeaDiscount();
-                float teaPrice = (float) tea.getTeaPrice();
-                price+=teaPrice*teaDiscount;
-            }
-            obj[i][0]= TimeNumberUtils.getLocalTrmSeqNum();
-            obj[i][1]= name;
-            obj[i][2]= price;
-            price=0;
-            obj[i][3]= TeaStatus.WAIT.getType();
+        List<String> productNameList=new ArrayList<>();
+        for (Tea tea : shopCardList) {
+            Double teaDiscount = tea.getTeaDiscount();
+            float teaPrice = (float) tea.getTeaPrice();
+            price+=teaPrice*teaDiscount;
+            productNameList.add(tea.getTeaName());
+        }
+        order.setOrderNumber(TimeNumberUtils.getLocalTrmSeqNum());
+        order.setOrderPrice(price);
+        String json = JSON.toJSON(productNameList).toString();
+        order.setOrderName(json);
+        order.setOrderCreatTime(new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date()));
+        order.setOrderStatus(0);
+        orderService.insertOrder(order);
+        clearShopCardList();
+
+        //调用当前订单的查询功能  就是为了刷新当前订单表
+        orderDisplay();
+
+    }
+
+    /**
+     * 当前订单表的刷新功能
+     */
+    public void orderDisplay(){
+        List<Order> orders = orderService.queryOrders();
+        coin= new String[]{"订单号","商品名称", "总价钱(元)","订单状态"};
+        dmt= new DefaultTableModel(null,coin);
+        dmt.setRowCount(0);
+        // System.out.println(1);
+        // System.out.println(orders.size());
+        Object[][] obj=new Object[orders.size()][coin.length];
+        // System.out.println(obj);
+        for (int i = 0; i < orders.size(); i++) {
+            Order order = orders.get(i);
+            obj[i][0]=order.getOrderNumber();
+            obj[i][1]=order.getOrderName();
+            obj[i][2]=order.getOrderPrice();
+            obj[i][3]=TeaStatus.WAIT.getType();
             dmt.addRow(obj[i]);
         }
         orderTable.setModel(dmt);
         orderTable.invalidate();
-        //把购物车的总价钱设置为0
-        label3.setText(" ");
     }
 
     /**
      * 订单完成按钮，点击订单完成，把数据库订单表的status字段改为1，成为历史订单。
+     * 注意：涉及订单表和商品表的双表  所以要判断是否进行事务回滚
      * @param e
      */
     private void finishOrderButtonActionPerformed(ActionEvent e) {
-        finishButtonNum++;
+        // finishButtonNum++;
+        // System.out.println("点击了完成订单次数："+finishButtonNum);
         // TODO add your code here
+        // int selectedRow = orderTable.getSelectedRow();
+        // List<Tea> list = orderList.get(selectedRow);
+        // List<String> name = new ArrayList<>();
+        // float price=0;
+        // for (Tea tea : list) {
+        //     name.add(tea.getTeaName());
+        //     Double teaDiscount = tea.getTeaDiscount();
+        //     float teaPrice = (float) tea.getTeaPrice();
+        //     price+=teaPrice*teaDiscount;
+        //
+        // }
+        // // System.out.println(list);
+        // Order order = new Order();
+        // order.setOrderNumber((String) orderTable.getValueAt(selectedRow,0));
+        // order.setOrderPrice((Float) orderTable.getValueAt(selectedRow,2));
+        // //把list转换为json字符串存储在数据库中
+        // String json = JSON.toJSON(name).toString();
+        // order.setOrderName(json);
+        // order.setOrderCreatTime(new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date()));
+        // order.setOrderStatus(1);
+        // int i = orderService.insertOrder(order);
+        // // System.out.println(i);
+        // //更新当前订单，调用结算按钮的方法
+        // orderList.remove(selectedRow);
+        // //调用一个方法，大小是orderList-1  数据是orderList中的数据  大小是  payButtonNum-finishButtonNum
+        // for (int i1 = 0; i1 < payButtonNum-finishButtonNum; i1++) {
+        //     List<Tea> list1 = orderList.get(i1);
+        //     orderList.add(list1);
+        // }
+        //
+        // System.out.println("点击完成订单之后 当前内存订单中的size数值"+orderList.size());
+        // //调用结算的按钮方法，但是不能让按钮的点击次数加1，所以采用方法重载的方式把参数去掉，再把点击次数加一的去掉
+        // payButtonActionPerformed();
+        //
+        // //数据库中对应的数量更新  然后调用查询全部的按钮方法
+        // Set set=new TreeSet();
+        // for (String productName : name) {
+        //     int i1 = productService.updateProductAmount(productName);
+        //     // if (i1==1){
+        //     //     JOptionPane.showMessageDialog(null,"请及时提醒客户产品已经做好");
+        //     // }else {
+        //     //     JOptionPane.showMessageDialog(null,"出现错误，请及时联系管理员处理");
+        //     // }
+        //     set.add(i1);
+        // }
+        // if (set.size()==1&&set.contains(1)){
+        //     JOptionPane.showMessageDialog(null,"请及时提醒客户产品已经做好");
+        // }
+        // searchAllActionPerformed();
+        // 点击订单完整之后，提醒客户取走，并且将其改为历史订单
         int selectedRow = orderTable.getSelectedRow();
-        List<Tea> list = orderList.get(selectedRow);
-        List<String> name = new ArrayList<>();
-        float price=0;
-        for (Tea tea : list) {
-            name.add(tea.getTeaName());
-            Double teaDiscount = tea.getTeaDiscount();
-            float teaPrice = (float) tea.getTeaPrice();
-            price+=teaPrice*teaDiscount;
-
+        String orderNumber = (String) orderTable.getValueAt(selectedRow, 0);
+        boolean status = orderService.updateOrderStatus(orderNumber);
+        if (status){
+            JOptionPane.showMessageDialog(null,"请及时提醒客户产品已经做好");
+            orderDisplay();
+        }else {
+            JOptionPane.showMessageDialog(null,"出现错误，请及时联系管理员处理");
         }
-        // System.out.println(list);
-        Order order = new Order();
-        order.setOrderNumber((String) orderTable.getValueAt(selectedRow,0));
-        order.setOrderPrice((Float) orderTable.getValueAt(selectedRow,2));
-        order.setOrderName(name.toString());
-        order.setOrderCreatTime(new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date()));
-        order.setOrderStatus(1);
-        int i = orderService.insertOrder(order);
-        System.out.println(i);
-        //更新当前订单，调用结算按钮的方法
-        orderList.remove(selectedRow);
-        //调用结算的按钮方法，但是不能让按钮的点击次数加1，所以采用方法重载的方式把参数去掉，再把点击次数加一的去掉
-        payButtonActionPerformed();
     }
 
     /**
-     *
+     *  清空购物车
      */
     private void payButtonActionPerformed() {
         //把与订单表初始化
@@ -288,24 +410,6 @@ public class Index extends JFrame {
         //清空数据
         dmt.setRowCount(0);
 
-        float price=0;
-        Object[][] obj = new Object[payButtonNum-finishButtonNum][coin.length];
-        for (int i = 0; i <payButtonNum-finishButtonNum ; i++) {
-            List<Tea> list = orderList.get(i);
-            List<String> name = new ArrayList<>();
-            for (Tea tea : list) {
-                name.add(tea.getTeaName());
-                Double teaDiscount = tea.getTeaDiscount();
-                float teaPrice = (float) tea.getTeaPrice();
-                price+=teaPrice*teaDiscount;
-            }
-            obj[i][0]= TimeNumberUtils.getLocalTrmSeqNum();
-            obj[i][1]= name;
-            obj[i][2]= price;
-            price=0;
-            obj[i][3]= TeaStatus.WAIT.getType();
-            dmt.addRow(obj[i]);
-        }
         orderTable.setModel(dmt);
         orderTable.invalidate();
         //把购物车的总价钱设置为0
@@ -405,7 +509,7 @@ public class Index extends JFrame {
         label2.setBounds(605, 675, 120, 40);
 
         //---- label3 ----
-        label3.setText("text");
+        label3.setText("     ");
         label3.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 24));
         label3.setBackground(Color.white);
         label3.setForeground(new Color(255, 51, 51));
@@ -453,6 +557,8 @@ public class Index extends JFrame {
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.setResizable(false);
     }
+
+
 
 
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables

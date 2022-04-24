@@ -96,6 +96,26 @@ public class ProductDaoImpl implements ProductDao {
         return 1;
     }
 
+    /**
+     * 结算之后把数据库中的产品数量-1
+     * @param name 根据name定位
+     */
+    @Override
+    public int updateProductAmount(String name) {
+        try {
+            conn=ConnUtil.getConn();
+            // UPDATE tea SET tea_price=tea_price-1
+            // WHERE tea_name='美式'
+            String sql="UPDATE tea SET tea_amount=tea_amount-1 WHERE tea_name=?";
+            psm=conn.prepareStatement(sql);
+            psm.setString(1,name);
+            psm.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 1;
+    }
+
     public static void main(String[] args) {
         ProductDaoImpl productDao = new ProductDaoImpl();
         List<Tea> list = productDao.selectAllProducts();

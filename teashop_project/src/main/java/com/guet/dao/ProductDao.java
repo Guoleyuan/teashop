@@ -11,4 +11,5 @@ public interface ProductDao {
 
     int insertProduct(Tea tea);
 
+    int updateProductAmount(String name);
 }

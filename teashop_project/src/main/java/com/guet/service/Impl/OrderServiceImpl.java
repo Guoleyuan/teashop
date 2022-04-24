@@ -5,6 +5,8 @@ import com.guet.dao.OrderDao;
 import com.guet.entity.Order;
 import com.guet.service.OrderService;
 
+import java.util.List;
+
 public class OrderServiceImpl implements OrderService {
 
     private OrderDao orderDao=new OrderDaoImpl();
@@ -18,4 +20,30 @@ public class OrderServiceImpl implements OrderService {
             return 0;
         }
     }
+
+    /**
+     * 查询所有订单状态为0的订单
+     * @return
+     */
+    @Override
+    public List<Order> queryOrders() {
+        List<Order> orders = orderDao.queryOrder();
+        return orders;
+    }
+
+    /**
+     * 将当前订单改为历史订单
+     * @param orderNumber
+     * @return
+     */
+    @Override
+    public boolean updateOrderStatus(String orderNumber) {
+        int i = orderDao.updateOrderStatus(orderNumber);
+        if (i==1){
+            return true;
+        }else {
+            return false;
+        }
+    }
+
 }
