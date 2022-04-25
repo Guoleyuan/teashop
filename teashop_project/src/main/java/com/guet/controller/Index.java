@@ -47,7 +47,6 @@ public class Index extends JFrame {
     public Index() {
         initComponents();
         searchAllActionPerformed();
-        System.out.println(1111111);
     }
 
     /**
