@@ -6,6 +6,7 @@ import java.util.Date;
 
 @Data
 public class Order {
+    private Integer orderId;
     private String orderNumber;
     private Float orderPrice;
     private String orderName;

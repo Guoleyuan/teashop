@@ -64,6 +64,7 @@ public class OrderDaoImpl implements OrderDao {
                 order.setOrderName(rs.getString("order_name"));
                 order.setOrderCreatTime(rs.getString("order_creatTime"));
                 order.setOrderStatus(rs.getInt("order_status"));
+                order.setOrderId(rs.getInt("order_id"));
                 list.add(order);
             }
         } catch (Exception e) {
