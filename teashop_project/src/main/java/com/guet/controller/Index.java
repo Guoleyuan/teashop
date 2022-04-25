@@ -11,6 +11,7 @@ import com.guet.service.Impl.OrderServiceImpl;
 import com.guet.service.Impl.ProductServiceImpl;
 import com.guet.service.OrderService;
 import com.guet.service.ProductService;
+import com.guet.util.MyTable;
 import com.guet.util.TimeNumberUtils;
 
 import javax.swing.*;
@@ -291,7 +292,7 @@ public class Index extends JFrame {
         clearShopCardList();
         label3.setText(" ");
         //把数据放到当前订单中  就是查询订单表中的所有order_status为0的值
-        
+
         //刷新订单表
         refreshCurrentOrder();
         //刷新商品表
@@ -354,6 +355,20 @@ public class Index extends JFrame {
         // orderList.remove(selectedRow);
         // //调用结算的按钮方法，但是不能让按钮的点击次数加1，所以采用方法重载的方式把参数去掉，再把点击次数加一的去掉
         // payButtonActionPerformed();
+
+
+        //先将order_status的值改为1  然后在刷新订单表
+        int selectedRow = orderTable.getSelectedRow();
+        String orderNumber = (String) orderTable.getValueAt(selectedRow, 0);
+        boolean b = orderService.updateOrderStatus(orderNumber);
+        if (b){
+            JOptionPane.showMessageDialog(null,"请提醒客户取茶");
+        }else {
+            JOptionPane.showMessageDialog(null,"出现错误，请及时联系管理员");
+        }
+
+        //刷新订单表
+        refreshCurrentOrder();
     }
 
 
@@ -361,19 +376,19 @@ public class Index extends JFrame {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         label1 = new JLabel();
         scrollPane1 = new JScrollPane();
-        table = new JTable();
+        table = new MyTable();
         searchAll = new JButton();
         textField1 = new JTextField();
         searchSome = new JButton();
         addProduct = new JButton();
         scrollPane2 = new JScrollPane();
-        preOrderTable = new JTable();
+        preOrderTable = new MyTable();
         addShopCart = new JButton();
         label2 = new JLabel();
         label3 = new JLabel();
         payButton = new JButton();
         scrollPane3 = new JScrollPane();
-        orderTable = new JTable();
+        orderTable = new MyTable();
         finishOrderButton = new JButton();
         label4 = new JLabel();
         label5 = new JLabel();
