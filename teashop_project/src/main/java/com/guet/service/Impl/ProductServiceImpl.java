@@ -5,6 +5,7 @@ import com.guet.dao.ProductDao;
 import com.guet.entity.Tea;
 import com.guet.service.ProductService;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public class ProductServiceImpl implements ProductService {
@@ -54,7 +55,7 @@ public class ProductServiceImpl implements ProductService {
      * @return
      */
     @Override
-    public int updateProductAmount(String name) {
+    public int updateProductAmount(String name) throws SQLException {
         int i = productDao.updateProductAmount(name);
         if (i==1){
             return 1;

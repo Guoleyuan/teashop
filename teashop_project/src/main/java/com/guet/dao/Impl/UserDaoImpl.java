@@ -3,6 +3,7 @@ package com.guet.dao.Impl;
 import com.guet.dao.UserDao;
 import com.guet.entity.User;
 import com.guet.util.ConnUtil;
+import com.guet.util.ConnectionHandler;
 import lombok.Data;
 
 import java.sql.Connection;
@@ -24,7 +25,7 @@ public class UserDaoImpl implements UserDao {
     public User getUserMessage() {
         User user=null;
         try {
-            conn = ConnUtil.getConn();
+            conn = ConnectionHandler.getConnection();
             String sql="SELECT user_name,user_password FROM user";
             psm=conn.prepareStatement(sql);
             rs=psm.executeQuery();

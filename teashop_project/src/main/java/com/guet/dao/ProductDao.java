@@ -2,6 +2,7 @@ package com.guet.dao;
 
 import com.guet.entity.Tea;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public interface ProductDao {
@@ -11,5 +12,5 @@ public interface ProductDao {
 
     int insertProduct(Tea tea);
 
-    int updateProductAmount(String name);
+    int updateProductAmount(String name) throws SQLException;
 }

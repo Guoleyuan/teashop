@@ -1,18 +1,26 @@
 package com.guet.service.Impl;
 
 import com.guet.dao.Impl.OrderDaoImpl;
+import com.guet.dao.Impl.ProductDaoImpl;
 import com.guet.dao.OrderDao;
+import com.guet.dao.ProductDao;
 import com.guet.entity.Order;
+import com.guet.entity.Tea;
 import com.guet.service.OrderService;
+import com.guet.service.ProductService;
+import com.guet.util.ConnectionHandler;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
 
 public class OrderServiceImpl implements OrderService {
 
     private OrderDao orderDao=new OrderDaoImpl();
+    private ProductDao productDao=new ProductDaoImpl();
 
     @Override
-    public int insertOrder(Order order) {
+    public int insertOrder(Order order) throws SQLException {
         int i = orderDao.insertOrder(order);
         if (i==1){
             return 1;
@@ -45,5 +53,40 @@ public class OrderServiceImpl implements OrderService {
             return false;
         }
     }
+
+    @Override
+    public void shopCardPay(Order order, List<Tea> shopCardList) {
+        Connection connection=null;
+        try {
+            connection= ConnectionHandler.getConnection();
+            System.out.println(connection);
+
+            connection.setAutoCommit(false);
+
+
+            orderDao.insertOrder(order);
+            //更新商品表，把数量剪掉对应的数目
+            for (Tea tea : shopCardList) {
+                String teaName = tea.getTeaName();
+                productDao.updateProductAmount(teaName);
+            }
+
+            connection.commit();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            try {
+                connection.rollback();
+                System.out.println("事务回滚了");
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }finally {
+                ConnectionHandler.closeConnection();
+            }
+        }
+
+
+    }
+
 
 }

@@ -279,14 +279,15 @@ public class Index extends JFrame {
         order.setOrderName(JSON.toJSONString(names));
         order.setOrderCreatTime(new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date()));
         order.setOrderStatus(0);
-        orderService.insertOrder(order);
-
-        //更新商品表，把数量剪掉对应的数目
-        for (Tea tea : shopCardList) {
-            String teaName = tea.getTeaName();
-            productService.updateProductAmount(teaName);
-        }
-
+        //让service层处理插入订单表和修改库存的事务
+        orderService.shopCardPay(order,shopCardList);
+        // orderService.insertOrder(order);
+        //
+        // //更新商品表，把数量剪掉对应的数目
+        // for (Tea tea : shopCardList) {
+        //     String teaName = tea.getTeaName();
+        //     productService.updateProductAmount(teaName);
+        // }
 
         //清空购物车
         clearShopCardList();
@@ -376,19 +377,19 @@ public class Index extends JFrame {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         label1 = new JLabel();
         scrollPane1 = new JScrollPane();
-        table = new MyTable();
+        table = new JTable();
         searchAll = new JButton();
         textField1 = new JTextField();
         searchSome = new JButton();
         addProduct = new JButton();
         scrollPane2 = new JScrollPane();
-        preOrderTable = new MyTable();
+        preOrderTable = new JTable();
         addShopCart = new JButton();
         label2 = new JLabel();
         label3 = new JLabel();
         payButton = new JButton();
         scrollPane3 = new JScrollPane();
-        orderTable = new MyTable();
+        orderTable = new JTable();
         finishOrderButton = new JButton();
         label4 = new JLabel();
         label5 = new JLabel();
@@ -465,7 +466,7 @@ public class Index extends JFrame {
         label2.setBounds(605, 675, 120, 40);
 
         //---- label3 ----
-        label3.setText("text");
+        label3.setText("     ");
         label3.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 24));
         label3.setBackground(Color.white);
         label3.setForeground(new Color(255, 51, 51));

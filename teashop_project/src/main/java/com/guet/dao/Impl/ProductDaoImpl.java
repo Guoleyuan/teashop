@@ -3,10 +3,12 @@ package com.guet.dao.Impl;
 import com.guet.dao.ProductDao;
 import com.guet.entity.Tea;
 import com.guet.util.ConnUtil;
+import com.guet.util.ConnectionHandler;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +27,7 @@ public class ProductDaoImpl implements ProductDao {
     public List<Tea> selectAllProducts() {
         List<Tea> list = new ArrayList<>();
         try {
-            conn = ConnUtil.getConn();
+            conn = ConnectionHandler.getConnection();
             String sql="SELECT tea_id,tea_name,tea_discount,tea_price,tea_category,tea_amount FROM tea";
             psm=conn.prepareStatement(sql);
             rs=psm.executeQuery();
@@ -53,7 +55,7 @@ public class ProductDaoImpl implements ProductDao {
     public List<Tea> selectSomeProducts(String str) {
         List<Tea> list = new ArrayList<>();
         try {
-            conn = ConnUtil.getConn();
+            conn = ConnectionHandler.getConnection();
             // SELECT * FROM tea WHERE tea_name LIKE '%波%' OR tea_category LIKE '%奶茶';
             String sql="SELECT tea_id,tea_name,tea_discount,tea_price,tea_category,tea_amount FROM tea WHERE " +
                     "tea_name LIKE \"%\"?\"%\"  OR tea_category LIKE \"%\"?\"%\" ";
@@ -80,7 +82,7 @@ public class ProductDaoImpl implements ProductDao {
     @Override
     public int insertProduct(Tea tea) {
         try {
-            conn = ConnUtil.getConn();
+            conn = ConnectionHandler.getConnection();
             String sql="INSERT INTO tea(tea_name,tea_amount,tea_price,tea_category,tea_discount)" +
                     "values(?,?,?,?,?)";
             psm=conn.prepareStatement(sql);
@@ -101,18 +103,15 @@ public class ProductDaoImpl implements ProductDao {
      * @param name 根据name定位
      */
     @Override
-    public int updateProductAmount(String name) {
-        try {
-            conn=ConnUtil.getConn();
+    public int updateProductAmount(String name) throws SQLException {
+            conn=ConnectionHandler.getConnection();
+            System.out.println(conn);
             // UPDATE tea SET tea_price=tea_price-1
             // WHERE tea_name='美式'
             String sql="UPDATE tea SET tea_amount=tea_amount-1 WHERE tea_name=?";
             psm=conn.prepareStatement(sql);
             psm.setString(1,name);
             psm.executeUpdate();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         return 1;
     }
 
