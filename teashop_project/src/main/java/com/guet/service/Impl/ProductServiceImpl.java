@@ -63,4 +63,19 @@ public class ProductServiceImpl implements ProductService {
             return 0;
         }
     }
+
+    /**
+     * 删除奶茶商品  通过id
+     * @param id
+     * @return
+     */
+    @Override
+    public boolean deleteProductById(int id) {
+        boolean b = productDao.deleteProductById(id);
+        if (b){
+            return true;
+        }else {
+            return false;
+        }
+    }
 }

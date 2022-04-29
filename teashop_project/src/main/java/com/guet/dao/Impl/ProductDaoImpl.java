@@ -46,7 +46,6 @@ public class ProductDaoImpl implements ProductDao {
         }
         return  list;
     }
-
     /**
      * 查询数据中所有带关键字的商品的信息
      * @return  返回一个list 里面存储了tea表中符合条件的
@@ -115,9 +114,25 @@ public class ProductDaoImpl implements ProductDao {
         return 1;
     }
 
-    public static void main(String[] args) {
-        ProductDaoImpl productDao = new ProductDaoImpl();
-        List<Tea> list = productDao.selectAllProducts();
-        list.forEach(tea -> System.out.println(tea));
+    /**
+     * 通过id删除商品信息
+     * @param id
+     * @return
+     */
+    @Override
+    public boolean deleteProductById(int id) {
+        try {
+            conn=ConnectionHandler.getConnection();
+            // DELETE FROM tea WHERE tea_id=9
+            String sql="DELETE FROM tea WHERE tea_id=?";
+            psm=conn.prepareStatement(sql);
+            psm.setInt(1,id);
+            psm.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return true;
     }
+
+
 }

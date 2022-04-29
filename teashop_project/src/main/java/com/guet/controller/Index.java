@@ -173,37 +173,39 @@ public class Index extends JFrame {
      */
     private void addShopCartActionPerformed(ActionEvent e) {
         // TODO add your code here
-        int index1 = table.getSelectedRow();//获取选中行
-        Tea tea = new Tea();
+            int index1 = table.getSelectedRow();//获取选中行
+            Tea tea = new Tea();
 
-        tea.setTeaName((String) table.getValueAt(index1,1));
-        tea.setTeaDiscount((Double) table.getValueAt(index1,2));
-        tea.setTeaPrice((Double) table.getValueAt(index1,3));
-        // System.out.println(tea);
-        shopCardList.add(tea);
+            tea.setTeaName((String) table.getValueAt(index1,1));
+            tea.setTeaDiscount((Double) table.getValueAt(index1,2));
+            tea.setTeaPrice((Double) table.getValueAt(index1,3));
+            // System.out.println(tea);
+            shopCardList.add(tea);
 
-        //把list数据放入到preOrderTable中
-        coin= new String[]{"产品名称","折扣", "单价(元)"};
+            //把list数据放入到preOrderTable中
+            coin= new String[]{"产品名称","折扣", "单价(元)"};
 
-        dmt= new DefaultTableModel(null,coin);
-        //清空数据
-        dmt.setRowCount(0);
-        float price=0;
-        Object[][] obj = new Object[shopCardList.size()][coin.length];
-        for (int i = 0; i < shopCardList.size(); i++) {
-            // dmt=new DefaultTableModel(obj,coin);
-            Tea tea1 = shopCardList.get(i);
-            obj[i][0]=tea1.getTeaName();
-            obj[i][1]= tea1.getTeaDiscount();
-            obj[i][2]=tea1.getTeaPrice();
-            dmt.addRow(obj[i]);
-            Double teaDiscount = tea1.getTeaDiscount();
-            float teaPrice = (float) tea1.getTeaPrice();
-            price+=teaPrice*teaDiscount;
-            label3.setText(String.valueOf(price)+"元");
-        }
-        preOrderTable.setModel(dmt);
-        preOrderTable.invalidate();
+            dmt= new DefaultTableModel(null,coin);
+            //清空数据
+            dmt.setRowCount(0);
+            float price=0;
+            Object[][] obj = new Object[shopCardList.size()][coin.length];
+            for (int i = 0; i < shopCardList.size(); i++) {
+                // dmt=new DefaultTableModel(obj,coin);
+                Tea tea1 = shopCardList.get(i);
+                obj[i][0]=tea1.getTeaName();
+                obj[i][1]= tea1.getTeaDiscount();
+                obj[i][2]=tea1.getTeaPrice();
+                dmt.addRow(obj[i]);
+                Double teaDiscount = tea1.getTeaDiscount();
+                float teaPrice = (float) tea1.getTeaPrice();
+                price+=teaPrice*teaDiscount;
+                label3.setText(String.valueOf(price)+"元");
+            }
+            preOrderTable.setModel(dmt);
+            preOrderTable.invalidate();
+
+
     }
 
     /**
@@ -265,39 +267,45 @@ public class Index extends JFrame {
         // //把购物车的总价钱设置为0
         // label3.setText(" ");
         //把shopCardList中的数据放入到数据库，order_status状态为0  然后在当前订单中先显示出来
-        Order order = new Order();
-        List<String> names = new ArrayList<>();
-        float price=0;
-        for (Tea tea : shopCardList) {
-            Double teaDiscount = tea.getTeaDiscount();
-            float teaPrice = (float) tea.getTeaPrice();
-            price+=teaPrice*teaDiscount;
-            names.add(tea.getTeaName());
+        if (shopCardList.size() == 0) {
+            JOptionPane.showMessageDialog(null,"请加入商品到购物车");
+            return;
+        }else {
+            Order order = new Order();
+            List<String> names = new ArrayList<>();
+            float price=0;
+            for (Tea tea : shopCardList) {
+                Double teaDiscount = tea.getTeaDiscount();
+                float teaPrice = (float) tea.getTeaPrice();
+                price+=teaPrice*teaDiscount;
+                names.add(tea.getTeaName());
+            }
+            order.setOrderNumber(TimeNumberUtils.getLocalTrmSeqNum());
+            order.setOrderPrice(price);
+            order.setOrderName(JSON.toJSONString(names));
+            order.setOrderCreatTime(new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date()));
+            order.setOrderStatus(0);
+            //让service层处理插入订单表和修改库存的事务
+            orderService.shopCardPay(order,shopCardList);
+            // orderService.insertOrder(order);
+            //
+            // //更新商品表，把数量剪掉对应的数目
+            // for (Tea tea : shopCardList) {
+            //     String teaName = tea.getTeaName();
+            //     productService.updateProductAmount(teaName);
+            // }
+
+            //清空购物车
+            clearShopCardList();
+            label3.setText(" ");
+            //把数据放到当前订单中  就是查询订单表中的所有order_status为0的值
+
+            //刷新订单表
+            refreshCurrentOrder();
+            //刷新商品表
+            searchAllActionPerformed();
+
         }
-        order.setOrderNumber(TimeNumberUtils.getLocalTrmSeqNum());
-        order.setOrderPrice(price);
-        order.setOrderName(JSON.toJSONString(names));
-        order.setOrderCreatTime(new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date()));
-        order.setOrderStatus(0);
-        //让service层处理插入订单表和修改库存的事务
-        orderService.shopCardPay(order,shopCardList);
-        // orderService.insertOrder(order);
-        //
-        // //更新商品表，把数量剪掉对应的数目
-        // for (Tea tea : shopCardList) {
-        //     String teaName = tea.getTeaName();
-        //     productService.updateProductAmount(teaName);
-        // }
-
-        //清空购物车
-        clearShopCardList();
-        label3.setText(" ");
-        //把数据放到当前订单中  就是查询订单表中的所有order_status为0的值
-
-        //刷新订单表
-        refreshCurrentOrder();
-        //刷新商品表
-        searchAllActionPerformed();
 
     }
 
@@ -372,6 +380,66 @@ public class Index extends JFrame {
         refreshCurrentOrder();
     }
 
+    /**
+     * 删除奶茶商品  获取主键id值来删除
+     * @param e
+     */
+    private void deleteProductButtonActionPerformed(ActionEvent e) {
+        // TODO add your code here
+        int selectedRow = table.getSelectedRow();
+        int valueAt = (int) table.getValueAt(selectedRow, 0);
+        int flag = JOptionPane.showConfirmDialog(null, "确定要删除吗?", "删除提示", 2);
+        if (flag==JOptionPane.YES_OPTION){
+            boolean b = productService.deleteProductById(valueAt);
+            if (b){
+                JOptionPane.showMessageDialog(null,"删除成功");
+            }else {
+                JOptionPane.showMessageDialog(null,"删除失败");
+            }
+        }else if (flag==JOptionPane.NO_OPTION){
+
+        }else if (flag==JOptionPane.CANCEL_OPTION){
+
+        }
+        searchAllActionPerformed();
+    }
+
+    /**
+     * 从购物车一处选中的商品
+     * @param e
+     */
+    private void deleteButtonActionPerformed(ActionEvent e) {
+        // TODO add your code here
+
+        int selectedRow = preOrderTable.getSelectedRow();
+        System.out.println(selectedRow);
+        shopCardList.remove(selectedRow);
+
+        //把list数据放入到preOrderTable中
+        coin= new String[]{"产品名称","折扣", "单价(元)"};
+
+        dmt= new DefaultTableModel(null,coin);
+        //清空数据
+        dmt.setRowCount(0);
+        float price=0;
+        Object[][] obj = new Object[shopCardList.size()][coin.length];
+        for (int i = 0; i < shopCardList.size(); i++) {
+            // dmt=new DefaultTableModel(obj,coin);
+            Tea tea1 = shopCardList.get(i);
+            obj[i][0]=tea1.getTeaName();
+            obj[i][1]= tea1.getTeaDiscount();
+            obj[i][2]=tea1.getTeaPrice();
+            dmt.addRow(obj[i]);
+            Double teaDiscount = tea1.getTeaDiscount();
+            float teaPrice = (float) tea1.getTeaPrice();
+            price+=teaPrice*teaDiscount;
+            label3.setText(String.valueOf(price)+"元");
+        }
+        preOrderTable.setModel(dmt);
+        preOrderTable.invalidate();
+
+    }
+
 
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
@@ -393,6 +461,8 @@ public class Index extends JFrame {
         finishOrderButton = new JButton();
         label4 = new JLabel();
         label5 = new JLabel();
+        deleteProductButton = new JButton();
+        deleteButton = new JButton();
 
         //======== this ========
         setIconImage(new ImageIcon(getClass().getResource("/imgs/logo.jpg")).getImage());
@@ -443,7 +513,7 @@ public class Index extends JFrame {
         addProduct.setText("\u6dfb\u52a0");
         addProduct.addActionListener(e -> addProductActionPerformed(e));
         contentPane.add(addProduct);
-        addProduct.setBounds(460, 350, 95, 40);
+        addProduct.setBounds(440, 350, 95, 40);
 
         //======== scrollPane2 ========
         {
@@ -456,7 +526,7 @@ public class Index extends JFrame {
         addShopCart.setText("\u52a0\u5165\u8d2d\u7269\u8f66");
         addShopCart.addActionListener(e -> addShopCartActionPerformed(e));
         contentPane.add(addShopCart);
-        addShopCart.setBounds(640, 340, 130, 55);
+        addShopCart.setBounds(775, 340, 130, 55);
 
         //---- label2 ----
         label2.setText("\u603b\u4ef7\u94b1\uff1a");
@@ -477,7 +547,7 @@ public class Index extends JFrame {
         payButton.setText("\u7ed3\u7b97");
         payButton.addActionListener(e -> payButtonActionPerformed(e));
         contentPane.add(payButton);
-        payButton.setBounds(360, 670, 135, 50);
+        payButton.setBounds(330, 670, 135, 50);
 
         //======== scrollPane3 ========
         {
@@ -505,6 +575,18 @@ public class Index extends JFrame {
         label5.setForeground(new Color(51, 255, 102));
         contentPane.add(label5);
         label5.setBounds(1425, 50, 130, 45);
+
+        //---- deleteProductButton ----
+        deleteProductButton.setText("\u5220\u9664");
+        deleteProductButton.addActionListener(e -> deleteProductButtonActionPerformed(e));
+        contentPane.add(deleteProductButton);
+        deleteProductButton.setBounds(540, 350, 95, 40);
+
+        //---- deleteButton ----
+        deleteButton.setText("\u4ece\u8d2d\u7269\u8f66\u79fb\u9664");
+        deleteButton.addActionListener(e -> deleteButtonActionPerformed(e));
+        contentPane.add(deleteButton);
+        deleteButton.setBounds(465, 670, 135, 50);
 
         contentPane.setPreferredSize(new Dimension(1590, 795));
         pack();
@@ -536,6 +618,8 @@ public class Index extends JFrame {
     private JButton finishOrderButton;
     private JLabel label4;
     private JLabel label5;
+    private JButton deleteProductButton;
+    private JButton deleteButton;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
     public static void main(String[] args) {
         Index index = new Index();

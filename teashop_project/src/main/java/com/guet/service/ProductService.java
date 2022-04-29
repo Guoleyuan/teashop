@@ -24,4 +24,6 @@ public interface ProductService {
     int insertProduct(Tea tea);
 
     int updateProductAmount(String name) throws SQLException;
+
+    boolean deleteProductById(int id);
 }
