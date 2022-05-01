@@ -11,7 +11,6 @@ import com.guet.service.Impl.OrderServiceImpl;
 import com.guet.service.Impl.ProductServiceImpl;
 import com.guet.service.OrderService;
 import com.guet.service.ProductService;
-import com.guet.util.MyTable;
 import com.guet.util.TimeNumberUtils;
 
 import javax.swing.*;
@@ -20,10 +19,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
+import java.util.*;
 import java.util.List;
 
 /**
@@ -165,6 +162,7 @@ public class Index extends JFrame {
     private void addProductActionPerformed(ActionEvent e) {
         // TODO add your code here
         new AddProduct();
+        searchAllActionPerformed();
     }
 
     /**
@@ -285,6 +283,12 @@ public class Index extends JFrame {
             order.setOrderName(JSON.toJSONString(names));
             order.setOrderCreatTime(new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date()));
             order.setOrderStatus(0);
+
+
+
+
+
+
             //让service层处理插入订单表和修改库存的事务
             orderService.shopCardPay(order,shopCardList);
             // orderService.insertOrder(order);
@@ -440,6 +444,18 @@ public class Index extends JFrame {
 
     }
 
+    /**
+     * 查看订单详情
+     * @param e
+     */
+    private void detailButtonActionPerformed(ActionEvent e) {
+        // TODO add your code here
+        int selectedRow = orderTable.getSelectedRow();
+        String value = (String) orderTable.getValueAt(selectedRow, 1);
+        new OrderDetail(value);
+
+    }
+
 
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
@@ -463,6 +479,7 @@ public class Index extends JFrame {
         label5 = new JLabel();
         deleteProductButton = new JButton();
         deleteButton = new JButton();
+        detailButton = new JButton();
 
         //======== this ========
         setIconImage(new ImageIcon(getClass().getResource("/imgs/logo.jpg")).getImage());
@@ -588,6 +605,12 @@ public class Index extends JFrame {
         contentPane.add(deleteButton);
         deleteButton.setBounds(465, 670, 135, 50);
 
+        //---- detailButton ----
+        detailButton.setText("\u67e5\u770b\u8be6\u60c5");
+        detailButton.addActionListener(e -> detailButtonActionPerformed(e));
+        contentPane.add(detailButton);
+        detailButton.setBounds(1300, 435, 125, 50);
+
         contentPane.setPreferredSize(new Dimension(1590, 795));
         pack();
         setLocationRelativeTo(getOwner());
@@ -620,6 +643,7 @@ public class Index extends JFrame {
     private JLabel label5;
     private JButton deleteProductButton;
     private JButton deleteButton;
+    private JButton detailButton;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
     public static void main(String[] args) {
         Index index = new Index();

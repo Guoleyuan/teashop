@@ -28,7 +28,7 @@ public class OrderDaoImpl implements OrderDao {
     @Override
     public int insertOrder(Order order) throws SQLException {
             conn = ConnectionHandler.getConnection();
-            System.out.println(conn);
+            // System.out.println(conn);
             //"INSERT INTO tea(tea_name,tea_amount,tea_price,tea_category,tea_discount)" +
             //                     "values(?,?,?,?,?)"
             String sql="INSERT INTO tea_order(order_number,order_price,order_name,order_creatTime,order_status)" +

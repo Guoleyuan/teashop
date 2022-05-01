@@ -104,7 +104,7 @@ public class ProductDaoImpl implements ProductDao {
     @Override
     public int updateProductAmount(String name) throws SQLException {
             conn=ConnectionHandler.getConnection();
-            System.out.println(conn);
+            // System.out.println(conn);
             // UPDATE tea SET tea_price=tea_price-1
             // WHERE tea_name='美式'
             String sql="UPDATE tea SET tea_amount=tea_amount-1 WHERE tea_name=?";

@@ -2,7 +2,7 @@ package com.guet.entity;
 
 import lombok.Data;
 
-import java.util.Date;
+import java.sql.Timestamp;
 
 @Data
 public class Order {
@@ -12,4 +12,8 @@ public class Order {
     private String orderName;
     private String orderCreatTime;
     private Integer orderStatus;
+    private Integer mchId;
+    private String outTradeNo;
+    private Timestamp orderTime;
+    private Integer transactionId;
 }
