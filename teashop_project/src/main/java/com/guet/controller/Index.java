@@ -11,6 +11,7 @@ import com.guet.service.Impl.OrderServiceImpl;
 import com.guet.service.Impl.ProductServiceImpl;
 import com.guet.service.OrderService;
 import com.guet.service.ProductService;
+import com.guet.util.MyTable;
 import com.guet.util.TimeNumberUtils;
 
 import javax.swing.*;
@@ -162,7 +163,6 @@ public class Index extends JFrame {
     private void addProductActionPerformed(ActionEvent e) {
         // TODO add your code here
         new AddProduct();
-        searchAllActionPerformed();
     }
 
     /**
@@ -283,12 +283,6 @@ public class Index extends JFrame {
             order.setOrderName(JSON.toJSONString(names));
             order.setOrderCreatTime(new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date()));
             order.setOrderStatus(0);
-
-
-
-
-
-
             //让service层处理插入订单表和修改库存的事务
             orderService.shopCardPay(order,shopCardList);
             // orderService.insertOrder(order);
@@ -457,6 +451,53 @@ public class Index extends JFrame {
     }
 
 
+
+    /**
+     * 查询到所有的打折的商品的信息
+     * */
+    /*private void searchDiscountActionPerformed(ActionEvent e) {
+        // TODO add your code here
+        new Discount();
+    }*/
+    /**
+    * 改变商品信息
+    * */
+   /* private void changeDiscountButtonActionPerformed(ActionEvent e) {
+        // TODO add your code here
+        //获取表中被选中的行的信息
+        int rowNo=table.getSelectedRow();
+        Tea tea =new Tea();
+        tea.setTeaId((Integer) table.getValueAt(rowNo,0));
+        tea.setTeaName((String) table.getValueAt(rowNo,1));
+        tea.setTeaDiscount((Double) table.getValueAt(rowNo,2));
+        tea.setTeaPrice((double) table.getValueAt(rowNo,3));
+        tea.setTeaCategory((String) table.getValueAt(rowNo,4));
+        tea.setTeaAmount((Integer) table.getValueAt(rowNo,5));
+        new ChangeDiscount(tea);
+    }*/
+    /**
+     * 当前订单之中显示的信息被覆盖，设置显示全部信息的按钮
+     * */
+    private void searchOrderButtonActionPerformed(ActionEvent e) {
+        // TODO add your code here
+        //需要被选中行的信息
+        int rowNo=orderTable.getSelectedRow();
+
+        //打印被选中行的所有信息
+        //调取OrderTable中的信息，需要组长的传送代码，明确参数是哪些，实现查询
+        //由于当前订单的订单状态全是待处理，故这里直接用0来代替
+        Order order=new Order();
+        order.setOrderNumber((String) orderTable.getValueAt(rowNo,0));
+        order.setOrderName((String) orderTable.getValueAt(rowNo,1));
+        order.setOrderPrice((Float) orderTable.getValueAt(rowNo,2));
+        order.setOrderStatus(0);
+        order.setOrderId((Integer) orderTable.getValueAt(rowNo,4));
+        System.out.println(order);//已经可以查询到所有产品信息
+        //查询待处理产品信息类
+        new SreachOrder(order);
+    }
+
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         label1 = new JLabel();
@@ -479,6 +520,7 @@ public class Index extends JFrame {
         label5 = new JLabel();
         deleteProductButton = new JButton();
         deleteButton = new JButton();
+        searchOrderButton = new JButton();
         detailButton = new JButton();
 
         //======== this ========
@@ -605,6 +647,12 @@ public class Index extends JFrame {
         contentPane.add(deleteButton);
         deleteButton.setBounds(465, 670, 135, 50);
 
+        //---- searchOrderButton ----
+        searchOrderButton.setText("\u67e5\u8be2\u8ba2\u5355");
+        searchOrderButton.addActionListener(e -> searchOrderButtonActionPerformed(e));
+        contentPane.add(searchOrderButton);
+        searchOrderButton.setBounds(1160, 435, 125, 50);
+
         //---- detailButton ----
         detailButton.setText("\u67e5\u770b\u8be6\u60c5");
         detailButton.addActionListener(e -> detailButtonActionPerformed(e));
@@ -643,6 +691,7 @@ public class Index extends JFrame {
     private JLabel label5;
     private JButton deleteProductButton;
     private JButton deleteButton;
+    private JButton searchOrderButton;
     private JButton detailButton;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
     public static void main(String[] args) {
