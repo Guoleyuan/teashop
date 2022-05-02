@@ -13,7 +13,6 @@ public class Order {
     private String orderCreatTime;
     private Integer orderStatus;
     private Integer mchId;
-    private String outTradeNo;
     private Timestamp orderTime;
     private Integer transactionId;
 }

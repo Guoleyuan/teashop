@@ -6,6 +6,7 @@ import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
+import com.guet.entity.Order;
 import com.guet.sdk.WXPayUtil;
 import com.guet.util.DateUtil;
 import org.apache.commons.logging.Log;
@@ -30,7 +31,7 @@ public class WXPay {
     public static void main(String[] args) throws Exception {
 
         // 生成二维码，完成支付
-        unifiedOrder();
+        // unifiedOrder();
         // 商家扫用户手机的条形码
         // scanCodeToPay("");
 
@@ -134,7 +135,7 @@ public class WXPay {
     /*
     下单：生成二维码
      */
-    public static void unifiedOrder() {
+    public static void unifiedOrder(Order order) {
         Map<String, String> resultMap = new HashMap();
         // String openid = "ouR0E1oP5UGTEBce8jZ_sChfH26g";
         MyConfig config = null;
@@ -158,11 +159,11 @@ public class WXPay {
         }
         String spbill_create_ip = addr.getHostAddress();
         //支付金额，需要转成字符串类型，否则后面的签名会失败
-        int total_fee = 1;//100分：1块钱
+        int total_fee = (int) (order.getOrderPrice()*100);//100分：1块钱
         //商品描述
-        String body = "路由器";
+        String body = "蜜雪冰城";
         //商户订单号
-        String out_trade_no = WXPayUtil.generateNonceStr();
+        String out_trade_no = order.getOrderNumber();
         //统一下单接口参数
         SortedMap<String, String> data = new TreeMap<String, String>();
         data.put("appid", "wxd9a46e74fc279fcc");
@@ -188,7 +189,7 @@ public class WXPay {
 
     public static void createQRCode(Map<String, String> map) throws Exception {
 
-        File outputFile = new File("C:/Users/郭乐源/Desktop" + File.separator + "new.jpg");
+        File outputFile = new File(System.getProperty("user.dir")+"/teashop_project/src/main/resources" + File.separator + "new.jpg");
         FileOutputStream fileOutputStream = new FileOutputStream(outputFile);
         String url = map.get("code_url");
         System.out.println("生成二维码的url：" + url);

@@ -36,7 +36,7 @@ public class ProductDaoImpl implements ProductDao {
                 tea.setTeaId(rs.getInt("tea_id"));
                 tea.setTeaName(rs.getString("tea_name"));
                 tea.setTeaAmount(rs.getInt("tea_amount"));
-                tea.setTeaPrice(rs.getInt("tea_price"));
+                tea.setTeaPrice(rs.getDouble("tea_price"));
                 tea.setTeaCategory(rs.getString("tea_category"));
                 tea.setTeaDiscount(rs.getDouble("tea_discount"));
                 list.add(tea);

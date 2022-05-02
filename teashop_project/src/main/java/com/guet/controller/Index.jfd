@@ -192,8 +192,8 @@ new FormModel {
 				"text": "查询打折商品"
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "searchDiscountActionPerformed", true ) )
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
-				"x": 945
-				"y": 490
+				"x": 1200
+				"y": 10
 				"height": 40
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
@@ -211,17 +211,7 @@ new FormModel {
 				"text": "查询订单"
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "searchOrderButtonActionPerformed", true ) )
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
-				"x": 1160
-				"y": 435
-				"width": 125
-				"height": 50
-			} )
-			add( new FormComponent( "javax.swing.JButton" ) {
-				name: "detailButton"
-				"text": "查看详情"
-				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "detailButtonActionPerformed", true ) )
-			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
-				"x": 1300
+				"x": 1305
 				"y": 435
 				"width": 125
 				"height": 50

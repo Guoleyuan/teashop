@@ -7,6 +7,8 @@ import com.alibaba.fastjson.JSON;
 import com.guet.entity.Order;
 import com.guet.entity.Tea;
 import com.guet.enums.TeaStatus;
+import com.guet.pay.WXPay;
+import com.guet.sdk.WXPayUtil;
 import com.guet.service.Impl.OrderServiceImpl;
 import com.guet.service.Impl.ProductServiceImpl;
 import com.guet.service.OrderService;
@@ -228,47 +230,13 @@ public class Index extends JFrame {
      * @param e
      */
     private void payButtonActionPerformed(ActionEvent e) {
-        // payButtonNum++;
-        // //把与订单表初始化
-        // clearShopCardList();
-        // //获取了orderList  把购物车的东西加入到当前订单中
         // // TODO add your code here
-        // //1.清空购物车的表格内容
-        // //2.将数据创建订单并且显示到当前订单orderTable中，显示status状态为0的，当点击完成订单之后，status转换为0，再刷新一下
-        // //把list数据放入到preOrderTable中
-        // coin= new String[]{"订单号","商品名称", "总价钱(元)","订单状态"};
-        // dmt= new DefaultTableModel(null,coin);
-        //
-        // //清空数据
-        // dmt.setRowCount(0);
-        //
-        // float price=0;
-        // Object[][] obj = new Object[payButtonNum-finishButtonNum][coin.length];
-        // for (int i = 0; i <payButtonNum-finishButtonNum ; i++) {
-        //     List<Tea> list = orderList.get(i);
-        //     List<String> name = new ArrayList<>();
-        //     for (Tea tea : list) {
-        //         name.add(tea.getTeaName());
-        //         Double teaDiscount = tea.getTeaDiscount();
-        //         float teaPrice = (float) tea.getTeaPrice();
-        //         price+=teaPrice*teaDiscount;
-        //     }
-        //     obj[i][0]= TimeNumberUtils.getLocalTrmSeqNum();
-        //     obj[i][1]= name;
-        //     obj[i][2]= price;
-        //     price=0;
-        //     obj[i][3]= TeaStatus.WAIT.getType();
-        //     dmt.addRow(obj[i]);
-        // }
-        // orderTable.setModel(dmt);
-        // orderTable.invalidate();
-        // //把购物车的总价钱设置为0
-        // label3.setText(" ");
-        //把shopCardList中的数据放入到数据库，order_status状态为0  然后在当前订单中先显示出来
+
         if (shopCardList.size() == 0) {
             JOptionPane.showMessageDialog(null,"请加入商品到购物车");
             return;
         }else {
+
             Order order = new Order();
             List<String> names = new ArrayList<>();
             float price=0;
@@ -278,20 +246,22 @@ public class Index extends JFrame {
                 price+=teaPrice*teaDiscount;
                 names.add(tea.getTeaName());
             }
-            order.setOrderNumber(TimeNumberUtils.getLocalTrmSeqNum());
+            order.setOrderNumber(WXPayUtil.generateNonceStr());
             order.setOrderPrice(price);
             order.setOrderName(JSON.toJSONString(names));
             order.setOrderCreatTime(new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date()));
             order.setOrderStatus(0);
+
+
+
+            WXPay.unifiedOrder(order);
+
+            new CodePay();
+
+
             //让service层处理插入订单表和修改库存的事务
-            orderService.shopCardPay(order,shopCardList);
-            // orderService.insertOrder(order);
-            //
-            // //更新商品表，把数量剪掉对应的数目
-            // for (Tea tea : shopCardList) {
-            //     String teaName = tea.getTeaName();
-            //     productService.updateProductAmount(teaName);
-            // }
+            // orderService.shopCardPay(order,shopCardList);
+
 
             //清空购物车
             clearShopCardList();
@@ -523,7 +493,6 @@ public class Index extends JFrame {
         searchDiscount = new JButton();
         changeDiscountButton = new JButton();
         searchOrderButton = new JButton();
-        detailButton = new JButton();
 
         //======== this ========
         setIconImage(new ImageIcon(getClass().getResource("/imgs/logo.jpg")).getImage());
@@ -653,7 +622,7 @@ public class Index extends JFrame {
         searchDiscount.setText("\u67e5\u8be2\u6253\u6298\u5546\u54c1");
         searchDiscount.addActionListener(e -> searchDiscountActionPerformed(e));
         contentPane.add(searchDiscount);
-        searchDiscount.setBounds(945, 490, searchDiscount.getPreferredSize().width, 40);
+        searchDiscount.setBounds(1200, 10, searchDiscount.getPreferredSize().width, 40);
 
         //---- changeDiscountButton ----
         changeDiscountButton.setText("\u4fee\u6539");
@@ -665,13 +634,7 @@ public class Index extends JFrame {
         searchOrderButton.setText("\u67e5\u8be2\u8ba2\u5355");
         searchOrderButton.addActionListener(e -> searchOrderButtonActionPerformed(e));
         contentPane.add(searchOrderButton);
-        searchOrderButton.setBounds(1160, 435, 125, 50);
-
-        //---- detailButton ----
-        detailButton.setText("\u67e5\u770b\u8be6\u60c5");
-        detailButton.addActionListener(e -> detailButtonActionPerformed(e));
-        contentPane.add(detailButton);
-        detailButton.setBounds(1300, 435, 125, 50);
+        searchOrderButton.setBounds(1305, 435, 125, 50);
 
         contentPane.setPreferredSize(new Dimension(1590, 795));
         pack();
@@ -708,7 +671,6 @@ public class Index extends JFrame {
     private JButton searchDiscount;
     private JButton changeDiscountButton;
     private JButton searchOrderButton;
-    private JButton detailButton;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
     public static void main(String[] args) {
         Index index = new Index();
