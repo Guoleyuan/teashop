@@ -455,14 +455,14 @@ public class Index extends JFrame {
     /**
      * 查询到所有的打折的商品的信息
      * */
-    /*private void searchDiscountActionPerformed(ActionEvent e) {
+    private void searchDiscountActionPerformed(ActionEvent e) {
         // TODO add your code here
         new Discount();
-    }*/
+    }
     /**
     * 改变商品信息
     * */
-   /* private void changeDiscountButtonActionPerformed(ActionEvent e) {
+    private void changeDiscountButtonActionPerformed(ActionEvent e) {
         // TODO add your code here
         //获取表中被选中的行的信息
         int rowNo=table.getSelectedRow();
@@ -474,7 +474,7 @@ public class Index extends JFrame {
         tea.setTeaCategory((String) table.getValueAt(rowNo,4));
         tea.setTeaAmount((Integer) table.getValueAt(rowNo,5));
         new ChangeDiscount(tea);
-    }*/
+    }
     /**
      * 当前订单之中显示的信息被覆盖，设置显示全部信息的按钮
      * */
@@ -520,6 +520,8 @@ public class Index extends JFrame {
         label5 = new JLabel();
         deleteProductButton = new JButton();
         deleteButton = new JButton();
+        searchDiscount = new JButton();
+        changeDiscountButton = new JButton();
         searchOrderButton = new JButton();
         detailButton = new JButton();
 
@@ -647,6 +649,18 @@ public class Index extends JFrame {
         contentPane.add(deleteButton);
         deleteButton.setBounds(465, 670, 135, 50);
 
+        //---- searchDiscount ----
+        searchDiscount.setText("\u67e5\u8be2\u6253\u6298\u5546\u54c1");
+        searchDiscount.addActionListener(e -> searchDiscountActionPerformed(e));
+        contentPane.add(searchDiscount);
+        searchDiscount.setBounds(945, 490, searchDiscount.getPreferredSize().width, 40);
+
+        //---- changeDiscountButton ----
+        changeDiscountButton.setText("\u4fee\u6539");
+        changeDiscountButton.addActionListener(e -> changeDiscountButtonActionPerformed(e));
+        contentPane.add(changeDiscountButton);
+        changeDiscountButton.setBounds(645, 350, 95, 40);
+
         //---- searchOrderButton ----
         searchOrderButton.setText("\u67e5\u8be2\u8ba2\u5355");
         searchOrderButton.addActionListener(e -> searchOrderButtonActionPerformed(e));
@@ -691,6 +705,8 @@ public class Index extends JFrame {
     private JLabel label5;
     private JButton deleteProductButton;
     private JButton deleteButton;
+    private JButton searchDiscount;
+    private JButton changeDiscountButton;
     private JButton searchOrderButton;
     private JButton detailButton;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
