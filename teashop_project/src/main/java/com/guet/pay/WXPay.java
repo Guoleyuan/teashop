@@ -1,5 +1,6 @@
 package com.guet.pay;
 
+import com.alibaba.fastjson.JSONObject;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.MultiFormatWriter;
@@ -16,10 +17,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.util.*;
 
 public class WXPay {
 
@@ -148,7 +146,7 @@ public class WXPay {
             e.printStackTrace();
         }
         //生成的随机字符串
-        String nonce_str = WXPayUtil.generateNonceStr();
+        String nonce_str = order.getOrderNumber();
         //获取客户端的ip地址
         //获取本机的ip地址
         InetAddress addr = null;
@@ -161,7 +159,19 @@ public class WXPay {
         //支付金额，需要转成字符串类型，否则后面的签名会失败
         int total_fee = (int) (order.getOrderPrice()*100);//100分：1块钱
         //商品描述
-        String body = "蜜雪冰城";
+        String orderName = order.getOrderName();
+
+        List<String> list = JSONObject.parseArray(orderName, String.class);
+        Map<String, Integer> map = new HashMap<>();
+        for (String s : list) {
+            if (map.containsKey(s)){
+                Integer integer = map.get(s);
+                map.put(s,++integer);
+            }else {
+                map.put(s,1);
+            }
+        }
+        String body = JSONObject.toJSONString(map);
         //商户订单号
         String out_trade_no = order.getOrderNumber();
         //统一下单接口参数
