@@ -7,8 +7,8 @@ public class Tea {
     private Integer teaId;
     private String teaName;
     private Integer teaAmount;
-    private double teaPrice;
+    private Float teaPrice;
     private String teaCategory;
-    private Double teaDiscount;
+    private Float teaDiscount;
 
 }

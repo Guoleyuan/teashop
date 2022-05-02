@@ -67,8 +67,8 @@ public class AddProduct extends JFrame {
         }else {
             Tea tea = new Tea();
             tea.setTeaName(addTextField1.getText());
-            tea.setTeaDiscount(Double.parseDouble(addTextField2.getText()));
-            tea.setTeaPrice(Integer.parseInt(addTextField3.getText()));
+            tea.setTeaDiscount(Float.parseFloat(addTextField2.getText()));
+            tea.setTeaPrice(Float.parseFloat(addTextField3.getText()));
             tea.setTeaCategory(addTextField4.getText());
             tea.setTeaAmount(Integer.parseInt(addTextField5.getText()));
             System.out.println(tea);

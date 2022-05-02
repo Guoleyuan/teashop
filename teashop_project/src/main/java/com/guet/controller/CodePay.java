@@ -5,6 +5,8 @@
 package com.guet.controller;
 
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
@@ -47,9 +49,22 @@ public class CodePay extends JFrame {
         this.setVisible(true);
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.setResizable(false);
+        this.addWindowListener(new MyWindowListener());
+
     }
 
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
     private JLabel codeLabel;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
+
+
+}
+class MyWindowListener extends WindowAdapter {
+    @Override
+    public void windowClosing(WindowEvent e) {
+        super.windowClosing(e);
+        // System.out.println("window is closed !");
+
+    }
+
 }

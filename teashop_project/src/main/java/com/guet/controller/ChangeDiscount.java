@@ -32,9 +32,9 @@ public class ChangeDiscount extends JFrame {
         int search=JOptionPane.showConfirmDialog(null,"是否修改商品信息？","修改提示",JOptionPane.YES_NO_OPTION);
         if(search==JOptionPane.YES_OPTION){
             tea.setTeaName(textField1.getText());
-            tea.setTeaPrice(Double.parseDouble(textField3.getText()));
+            tea.setTeaPrice(Float.parseFloat(textField3.getText()));
             tea.setTeaCategory(textField4.getText());
-            tea.setTeaDiscount(Double.parseDouble(textField2.getText()));
+            tea.setTeaDiscount(Float.parseFloat(textField2.getText()));
             int i=discountproductService.changeDiscount(tea);
             if(i==1){
                 JOptionPane.showMessageDialog(null,"修改成功");

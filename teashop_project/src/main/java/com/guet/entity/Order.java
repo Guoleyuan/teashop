@@ -10,9 +10,8 @@ public class Order {
     private String orderNumber;
     private Float orderPrice;
     private String orderName;
-    private String orderCreatTime;
     private Integer orderStatus;
     private Integer mchId;
     private Timestamp orderTime;
-    private Integer transactionId;
+    private String transactionId;
 }

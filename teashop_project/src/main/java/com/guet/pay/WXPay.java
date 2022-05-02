@@ -161,23 +161,14 @@ public class WXPay {
         //商品描述
         String orderName = order.getOrderName();
 
-        List<String> list = JSONObject.parseArray(orderName, String.class);
-        Map<String, Integer> map = new HashMap<>();
-        for (String s : list) {
-            if (map.containsKey(s)){
-                Integer integer = map.get(s);
-                map.put(s,++integer);
-            }else {
-                map.put(s,1);
-            }
-        }
-        String body = JSONObject.toJSONString(map);
+
+        String body = "蜜雪冰城";
         //商户订单号
         String out_trade_no = order.getOrderNumber();
         //统一下单接口参数
         SortedMap<String, String> data = new TreeMap<String, String>();
         data.put("appid", "wxd9a46e74fc279fcc");
-        data.put("body", body);
+        data.put("body",body);
         data.put("mch_id", "1623889015");
         // 回调接口，必须是一个域名，不能使用IP
         // 腾讯会自动调用你（程序自己提供的接口）的接口，给你发送支付结果的数据，数据格式：xml格式
@@ -187,6 +178,9 @@ public class WXPay {
         data.put("trade_type", "NATIVE");//支付类型
         data.put("total_fee", String.valueOf(total_fee));
         // data.put("openid", openid);
+        String s = orderName + ";";
+        System.out.println(s);
+        data.put("attach",s);
 
         try {
             Map<String, String> rMap = wxpay.unifiedOrder(data);

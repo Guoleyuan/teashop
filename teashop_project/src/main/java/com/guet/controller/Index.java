@@ -31,6 +31,7 @@ import java.util.List;
  */
 public class Index extends JFrame {
 
+
     String[]coin;
     DefaultTableModel dmt;
     //添加到购物车使用的list
@@ -44,10 +45,14 @@ public class Index extends JFrame {
     private OrderService orderService=new OrderServiceImpl();
 
 
+
+
     public Index() {
         initComponents();
         searchAllActionPerformed();
+        refreshCurrentOrder();
     }
+
 
     /**
      * 点击查询按钮  查出所有的数据
@@ -81,7 +86,7 @@ public class Index extends JFrame {
         table.invalidate();
     }
 
-    private void searchAllActionPerformed() {
+    public void searchAllActionPerformed() {
 
         coin= new String[]{"编号", "奶茶", "折扣", "单价（元）", "奶茶品种", "剩余数量（杯）"};
         dmt= new DefaultTableModel(null,coin);
@@ -177,8 +182,8 @@ public class Index extends JFrame {
             Tea tea = new Tea();
 
             tea.setTeaName((String) table.getValueAt(index1,1));
-            tea.setTeaDiscount((Double) table.getValueAt(index1,2));
-            tea.setTeaPrice((Double) table.getValueAt(index1,3));
+            tea.setTeaDiscount((Float) table.getValueAt(index1,2));
+            tea.setTeaPrice((Float) table.getValueAt(index1,3));
             // System.out.println(tea);
             shopCardList.add(tea);
 
@@ -197,7 +202,7 @@ public class Index extends JFrame {
                 obj[i][1]= tea1.getTeaDiscount();
                 obj[i][2]=tea1.getTeaPrice();
                 dmt.addRow(obj[i]);
-                Double teaDiscount = tea1.getTeaDiscount();
+                Float teaDiscount = tea1.getTeaDiscount();
                 float teaPrice = (float) tea1.getTeaPrice();
                 price+=teaPrice*teaDiscount;
                 label3.setText(String.valueOf(price)+"元");
@@ -241,7 +246,7 @@ public class Index extends JFrame {
             List<String> names = new ArrayList<>();
             float price=0;
             for (Tea tea : shopCardList) {
-                Double teaDiscount = tea.getTeaDiscount();
+                Float teaDiscount = tea.getTeaDiscount();
                 float teaPrice = (float) tea.getTeaPrice();
                 price+=teaPrice*teaDiscount;
                 names.add(tea.getTeaName());
@@ -249,7 +254,6 @@ public class Index extends JFrame {
             order.setOrderNumber(WXPayUtil.generateNonceStr());
             order.setOrderPrice(price);
             order.setOrderName(JSON.toJSONString(names));
-            order.setOrderCreatTime(new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date()));
             order.setOrderStatus(0);
 
 
@@ -265,13 +269,22 @@ public class Index extends JFrame {
 
             //清空购物车
             clearShopCardList();
+
             label3.setText(" ");
             //把数据放到当前订单中  就是查询订单表中的所有order_status为0的值
 
-            //刷新订单表
-            refreshCurrentOrder();
-            //刷新商品表
-            searchAllActionPerformed();
+
+            try {
+                Thread.sleep(3000);
+
+                //刷新订单表
+                refreshCurrentOrder();
+                //刷新商品表
+                searchAllActionPerformed();
+
+            } catch (InterruptedException ex) {
+                ex.printStackTrace();
+            }
 
         }
 
@@ -280,7 +293,7 @@ public class Index extends JFrame {
     /**
      * 刷新当前订单表，就是查询出所有还没有制作完成的订单
      */
-    private void refreshCurrentOrder() {
+    public void refreshCurrentOrder() {
         coin= new String[]{"订单号","商品名称", "总价钱(元)","订单状态","等待号"};
         dmt= new DefaultTableModel(null,coin);
 
@@ -306,35 +319,7 @@ public class Index extends JFrame {
      * @param e
      */
     private void finishOrderButtonActionPerformed(ActionEvent e) {
-        // finishButtonNum++;
         // // TODO add your code here
-        // int selectedRow = orderTable.getSelectedRow();
-        // List<Tea> list = orderList.get(selectedRow);
-        // List<String> name = new ArrayList<>();
-        // float price=0;
-        // for (Tea tea : list) {
-        //     name.add(tea.getTeaName());
-        //     Double teaDiscount = tea.getTeaDiscount();
-        //     float teaPrice = (float) tea.getTeaPrice();
-        //     price+=teaPrice*teaDiscount;
-        //
-        // }
-        // // System.out.println(list);
-        // Order order = new Order();
-        // order.setOrderNumber((String) orderTable.getValueAt(selectedRow,0));
-        // order.setOrderPrice((Float) orderTable.getValueAt(selectedRow,2));
-        // order.setOrderName(name.toString());
-        // order.setOrderCreatTime(new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date()));
-        // order.setOrderStatus(1);
-        // int i = orderService.insertOrder(order);
-        // System.out.println(i);
-        // //更新当前订单，调用结算按钮的方法
-        // orderList.remove(selectedRow);
-        // //调用结算的按钮方法，但是不能让按钮的点击次数加1，所以采用方法重载的方式把参数去掉，再把点击次数加一的去掉
-        // payButtonActionPerformed();
-
-
-        //先将order_status的值改为1  然后在刷新订单表
         int selectedRow = orderTable.getSelectedRow();
         String orderNumber = (String) orderTable.getValueAt(selectedRow, 0);
         boolean b = orderService.updateOrderStatus(orderNumber);
@@ -398,7 +383,7 @@ public class Index extends JFrame {
             obj[i][1]= tea1.getTeaDiscount();
             obj[i][2]=tea1.getTeaPrice();
             dmt.addRow(obj[i]);
-            Double teaDiscount = tea1.getTeaDiscount();
+            Float teaDiscount = tea1.getTeaDiscount();
             float teaPrice = (float) tea1.getTeaPrice();
             price+=teaPrice*teaDiscount;
             label3.setText(String.valueOf(price)+"元");
@@ -439,8 +424,8 @@ public class Index extends JFrame {
         Tea tea =new Tea();
         tea.setTeaId((Integer) table.getValueAt(rowNo,0));
         tea.setTeaName((String) table.getValueAt(rowNo,1));
-        tea.setTeaDiscount((Double) table.getValueAt(rowNo,2));
-        tea.setTeaPrice((double) table.getValueAt(rowNo,3));
+        tea.setTeaDiscount((Float) table.getValueAt(rowNo,2));
+        tea.setTeaPrice((Float) table.getValueAt(rowNo,3));
         tea.setTeaCategory((String) table.getValueAt(rowNo,4));
         tea.setTeaAmount((Integer) table.getValueAt(rowNo,5));
         new ChangeDiscount(tea);
@@ -465,6 +450,14 @@ public class Index extends JFrame {
         System.out.println(order);//已经可以查询到所有产品信息
         //查询待处理产品信息类
         new SreachOrder(order);
+    }
+
+    private void refreshButtonActionPerformed(ActionEvent e) {
+        // TODO add your code here
+        //刷新订单表
+        refreshCurrentOrder();
+        //刷新商品表
+        searchAllActionPerformed();
     }
 
 
@@ -493,6 +486,7 @@ public class Index extends JFrame {
         searchDiscount = new JButton();
         changeDiscountButton = new JButton();
         searchOrderButton = new JButton();
+        refreshButton = new JButton();
 
         //======== this ========
         setIconImage(new ImageIcon(getClass().getResource("/imgs/logo.jpg")).getImage());
@@ -622,7 +616,7 @@ public class Index extends JFrame {
         searchDiscount.setText("\u67e5\u8be2\u6253\u6298\u5546\u54c1");
         searchDiscount.addActionListener(e -> searchDiscountActionPerformed(e));
         contentPane.add(searchDiscount);
-        searchDiscount.setBounds(1200, 10, searchDiscount.getPreferredSize().width, 40);
+        searchDiscount.setBounds(1200, 10, 95, 40);
 
         //---- changeDiscountButton ----
         changeDiscountButton.setText("\u4fee\u6539");
@@ -635,6 +629,12 @@ public class Index extends JFrame {
         searchOrderButton.addActionListener(e -> searchOrderButtonActionPerformed(e));
         contentPane.add(searchOrderButton);
         searchOrderButton.setBounds(1305, 435, 125, 50);
+
+        //---- refreshButton ----
+        refreshButton.setText("\u5237\u65b0\u8ba2\u5355");
+        refreshButton.addActionListener(e -> refreshButtonActionPerformed(e));
+        contentPane.add(refreshButton);
+        refreshButton.setBounds(1315, 10, 95, 40);
 
         contentPane.setPreferredSize(new Dimension(1590, 795));
         pack();
@@ -671,6 +671,7 @@ public class Index extends JFrame {
     private JButton searchDiscount;
     private JButton changeDiscountButton;
     private JButton searchOrderButton;
+    private JButton refreshButton;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
     public static void main(String[] args) {
         Index index = new Index();

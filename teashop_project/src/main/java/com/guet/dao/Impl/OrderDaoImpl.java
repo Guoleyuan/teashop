@@ -1,9 +1,10 @@
 package com.guet.dao.Impl;
 
+
+
+
 import com.guet.dao.OrderDao;
 import com.guet.entity.Order;
-import com.guet.entity.Tea;
-import com.guet.util.ConnUtil;
 import com.guet.util.ConnectionHandler;
 
 import java.sql.Connection;
@@ -21,7 +22,7 @@ public class OrderDaoImpl implements OrderDao {
 
 
     /**
-     * mysql实现订单表的查询
+     * mysql实现订单表的插入
      * @param order
      * @return
      */
@@ -31,14 +32,15 @@ public class OrderDaoImpl implements OrderDao {
             // System.out.println(conn);
             //"INSERT INTO tea(tea_name,tea_amount,tea_price,tea_category,tea_discount)" +
             //                     "values(?,?,?,?,?)"
-            String sql="INSERT INTO tea_order(order_number,order_price,order_name,order_creatTime,order_status)" +
-                    "values(?,?,?,?,?)";
+            String sql="INSERT INTO tea_order(order_number,order_price,order_name,mch_id,transaction_id,order_time)" +
+                    "values(?,?,?,?,?,?)";
             psm=conn.prepareStatement(sql);
             psm.setString(1,order.getOrderNumber());
             psm.setFloat(2,order.getOrderPrice());
             psm.setString(3,order.getOrderName());
-            psm.setString(4,order.getOrderCreatTime());
-            psm.setInt(5,order.getOrderStatus());
+            psm.setInt(4,order.getMchId());
+            psm.setString(5,order.getTransactionId());
+            psm.setTimestamp(6,order.getOrderTime());
             psm.executeUpdate();
         return 1;
     }
@@ -53,7 +55,7 @@ public class OrderDaoImpl implements OrderDao {
         try {
             conn=ConnectionHandler.getConnection();
             // SELECT * FROM tea_order WHERE order_status=0
-            String sql="SELECT * FROM tea_order WHERE order_status= 0 ORDER BY order_creatTime ASC";
+            String sql="SELECT * FROM tea_order WHERE order_status= 0 ORDER BY order_time ASC";
             psm=conn.prepareStatement(sql);
             rs=psm.executeQuery();
             while (rs.next()){
@@ -61,9 +63,11 @@ public class OrderDaoImpl implements OrderDao {
                 order.setOrderNumber(rs.getString("order_number"));
                 order.setOrderPrice(rs.getFloat("order_price"));
                 order.setOrderName(rs.getString("order_name"));
-                order.setOrderCreatTime(rs.getString("order_creatTime"));
+                order.setOrderTime(rs.getTimestamp("order_time"));
                 order.setOrderStatus(rs.getInt("order_status"));
                 order.setOrderId(rs.getInt("order_id"));
+                order.setTransactionId(rs.getString("transaction_id"));
+                order.setMchId(rs.getInt("mch_id"));
                 list.add(order);
             }
         } catch (Exception e) {
