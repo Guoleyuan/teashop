@@ -69,9 +69,9 @@ public class Login extends JFrame {
 
 
         label1 = new JLabel();
-        username = new JTextField("guet");
+        username = new JTextField();
         label2 = new JLabel();
-        password = new JPasswordField("guet1234");
+        password = new JPasswordField();
         button1 = new JButton();
         button2 = new JButton();
 

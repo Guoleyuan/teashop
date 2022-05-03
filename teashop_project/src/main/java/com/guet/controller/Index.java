@@ -559,9 +559,9 @@ public class Index extends JFrame {
         //======== this ========
         setIconImage(new ImageIcon(getClass().getResource("/imgs/logo.jpg")).getImage());
         setTitle("\u871c\u96ea\u51b0\u57ce");
+        this.setPreferredSize(new Dimension(1600, 795));
         JPanel contentPane = (JPanel) getContentPane();
         contentPane.setLayout(null);
-
         contentPane.setOpaque(false);
 
         //---- button ----   节日名称展示
@@ -575,7 +575,7 @@ public class Index extends JFrame {
         button.setBounds(5,100,300,100);
 
         //---- eventButton ----   修改节日名称
-        eventButton.setText("添加节日名称");
+        eventButton.setText("添加活动");
         eventButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -729,7 +729,7 @@ public class Index extends JFrame {
         deleteButton.setBounds(470, 650, 135, 50);
 
         //---- searchDiscount ----
-        searchDiscount.setText("\u67e5\u8be2\u6253\u6298\u5546\u54c1");
+        searchDiscount.setText("打折产品");
         searchDiscount.addActionListener(e -> searchDiscountActionPerformed(e));
         contentPane.add(searchDiscount);
         searchDiscount.setBounds(1200, 10, 95, 40);
@@ -773,6 +773,7 @@ public class Index extends JFrame {
         setLocationRelativeTo(getOwner());
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
         this.setVisible(true);
+
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.setResizable(false);
 
