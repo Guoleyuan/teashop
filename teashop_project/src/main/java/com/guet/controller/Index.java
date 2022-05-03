@@ -460,6 +460,63 @@ public class Index extends JFrame {
         searchAllActionPerformed();
     }
 
+    /**
+     * 付款码支付  扫码枪扫取之后进行付款
+     * @param e
+     */
+    private void paymentCodeButtonActionPerformed(ActionEvent e){
+        // TODO add your code here
+        //132840844856049306
+        String auth_code = textField2.getText();
+
+        if (shopCardList.size() == 0) {
+            JOptionPane.showMessageDialog(null,"请加入商品到购物车");
+            return;
+        }else {
+
+            Order order = new Order();
+            List<String> names = new ArrayList<>();
+            float price = 0;
+            for (Tea tea : shopCardList) {
+                Float teaDiscount = tea.getTeaDiscount();
+                float teaPrice = (float) tea.getTeaPrice();
+                price += teaPrice * teaDiscount;
+                names.add(tea.getTeaName());
+            }
+            order.setOrderNumber(WXPayUtil.generateNonceStr());
+            order.setOrderPrice(price);
+            order.setOrderName(JSON.toJSONString(names));
+            order.setOrderStatus(0);
+
+            try {
+                String returnStatus = WXPay.scanCodeToPay(auth_code, order);
+                if ("SUCCESS".equals(returnStatus)){
+
+                    orderService.shopCardPay(order,shopCardList);
+
+
+                    //清空购物车
+                    clearShopCardList();
+
+                    label3.setText(" ");
+
+                    //刷新订单表
+                    refreshCurrentOrder();
+                    //刷新商品表
+                    searchAllActionPerformed();
+
+                }else {
+                    JOptionPane.showMessageDialog(null,"支付失败，请重新扫码");
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+
+
+        }
+
+    }
+
 
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
@@ -487,6 +544,8 @@ public class Index extends JFrame {
         changeDiscountButton = new JButton();
         searchOrderButton = new JButton();
         refreshButton = new JButton();
+        paymentCodeButton = new JButton();
+        textField2 = new JTextField();
 
         //======== this ========
         setIconImage(new ImageIcon(getClass().getResource("/imgs/logo.jpg")).getImage());
@@ -544,7 +603,7 @@ public class Index extends JFrame {
             scrollPane2.setViewportView(preOrderTable);
         }
         contentPane.add(scrollPane2);
-        scrollPane2.setBounds(330, 480, 570, 190);
+        scrollPane2.setBounds(335, 450, 570, 190);
 
         //---- addShopCart ----
         addShopCart.setText("\u52a0\u5165\u8d2d\u7269\u8f66");
@@ -557,7 +616,7 @@ public class Index extends JFrame {
         label2.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 28));
         label2.setForeground(Color.red);
         contentPane.add(label2);
-        label2.setBounds(605, 675, 120, 40);
+        label2.setBounds(610, 660, 120, 40);
 
         //---- label3 ----
         label3.setText("     ");
@@ -565,13 +624,13 @@ public class Index extends JFrame {
         label3.setBackground(Color.white);
         label3.setForeground(new Color(255, 51, 51));
         contentPane.add(label3);
-        label3.setBounds(720, 675, 170, 45);
+        label3.setBounds(715, 655, 170, 45);
 
         //---- payButton ----
-        payButton.setText("\u7ed3\u7b97");
+        payButton.setText("\u5fae\u4fe1\u4e8c\u7ef4\u7801\u652f\u4ed8");
         payButton.addActionListener(e -> payButtonActionPerformed(e));
         contentPane.add(payButton);
-        payButton.setBounds(330, 670, 135, 50);
+        payButton.setBounds(330, 650, 135, 50);
 
         //======== scrollPane3 ========
         {
@@ -591,7 +650,7 @@ public class Index extends JFrame {
         label4.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 28));
         label4.setForeground(new Color(51, 51, 255));
         contentPane.add(label4);
-        label4.setBounds(335, 410, 135, 70);
+        label4.setBounds(335, 400, 135, 55);
 
         //---- label5 ----
         label5.setText("\u5f53\u524d\u8ba2\u5355");
@@ -610,7 +669,7 @@ public class Index extends JFrame {
         deleteButton.setText("\u4ece\u8d2d\u7269\u8f66\u79fb\u9664");
         deleteButton.addActionListener(e -> deleteButtonActionPerformed(e));
         contentPane.add(deleteButton);
-        deleteButton.setBounds(465, 670, 135, 50);
+        deleteButton.setBounds(470, 650, 135, 50);
 
         //---- searchDiscount ----
         searchDiscount.setText("\u67e5\u8be2\u6253\u6298\u5546\u54c1");
@@ -635,6 +694,14 @@ public class Index extends JFrame {
         refreshButton.addActionListener(e -> refreshButtonActionPerformed(e));
         contentPane.add(refreshButton);
         refreshButton.setBounds(1315, 10, 95, 40);
+
+        //---- paymentCodeButton ----
+        paymentCodeButton.setText("\u5fae\u4fe1\u4ed8\u6b3e\u7801\u652f\u4ed8");
+        paymentCodeButton.addActionListener(e -> paymentCodeButtonActionPerformed(e));
+        contentPane.add(paymentCodeButton);
+        paymentCodeButton.setBounds(765, 710, 135, 50);
+        contentPane.add(textField2);
+        textField2.setBounds(335, 710, 425, 50);
 
         contentPane.setPreferredSize(new Dimension(1590, 795));
         pack();
@@ -672,6 +739,8 @@ public class Index extends JFrame {
     private JButton changeDiscountButton;
     private JButton searchOrderButton;
     private JButton refreshButton;
+    private JButton paymentCodeButton;
+    private JTextField textField2;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
     public static void main(String[] args) {
         Index index = new Index();

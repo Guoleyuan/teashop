@@ -12,6 +12,9 @@ import com.guet.sdk.WXPayUtil;
 import com.guet.util.DateUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.dom4j.Document;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -31,16 +34,15 @@ public class WXPay {
         // 生成二维码，完成支付
         // unifiedOrder();
         // 商家扫用户手机的条形码
-        // scanCodeToPay("");
 
     }
 
     /**
-     * 扫码支付
+     * 微信付款吗支付
      *
      * @throws Exception
      */
-    public static String scanCodeToPay(String auth_code) throws Exception {
+    public static String scanCodeToPay(String auth_code,Order order) throws Exception {
         InetAddress addr = null;
         try {
             addr = InetAddress.getLocalHost();
@@ -51,16 +53,22 @@ public class WXPay {
 
         MyConfig config = new MyConfig();
         com.guet.sdk.WXPay wxpay = new com.guet.sdk.WXPay(config);
-        String out_trade_no = DateUtil.getCurrentTime();
+
+        String out_trade_no = order.getOrderNumber();
         Map<String, String> map = new HashMap<>(16);
-        map.put("attach", "订单额外描述");
+
+        String orderName = order.getOrderName();
+        String s = orderName + ";";
+
+        map.put("attach",s );
         map.put("auth_code", auth_code);
-        map.put("body", "小米手机");
-        map.put("device_info", "桂电1号店");
+        map.put("body", "蜜雪冰城");
+        map.put("device_info", "桂电10号店");
         map.put("nonce_str", WXPayUtil.generateNonceStr());
         map.put("out_trade_no", out_trade_no);
         map.put("spbill_create_ip", spbill_create_ip);
-        map.put("total_fee", "1000");
+        int total_fee = (int) (order.getOrderPrice()*100);//100分：1块钱
+        map.put("total_fee", String.valueOf(total_fee));
         //生成签名
         String sign = WXPayUtil.generateSignature(map, config.getKey());
         map.put("sign", sign);
@@ -74,8 +82,10 @@ public class WXPay {
             e.printStackTrace();
             log.error("微信支付失败" + e);
         }
+
+
         //判断支付是否成功
-        /*String return_code = null;
+        String return_code = null;
         String result_code = null;
         String err_code_des = null;
         String err_code = null;
@@ -95,8 +105,8 @@ public class WXPay {
             } else if (element.getName().equals("err_code")) {
                 err_code = element.getTextTrim();
             }
-        }*/
-        /*if (PAY_SUCCESS.equals(return_code) && PAY_SUCCESS.equals(result_code)) {
+        }
+        if (PAY_SUCCESS.equals(return_code) && PAY_SUCCESS.equals(result_code)) {
             log.info("微信免密支付成功！");
             return PAY_SUCCESS;
         } else if (PAY_USERPAYING.equals(err_code)) {
@@ -126,8 +136,8 @@ public class WXPay {
                 log.info("正在支付" + orderResp);
             }
         }
-        log.error("微信支付失败！");*/
-        return "";
+        log.error("微信支付失败！");
+        return "支付失败";
     }
 
     /*

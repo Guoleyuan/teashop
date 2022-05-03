@@ -76,8 +76,8 @@ new FormModel {
 					name: "preOrderTable"
 				} )
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
-				"x": 330
-				"y": 480
+				"x": 335
+				"y": 450
 				"width": 570
 				"height": 190
 			} )
@@ -97,8 +97,8 @@ new FormModel {
 				"font": new java.awt.Font( "Microsoft YaHei UI", 0, 28 )
 				"foreground": new java.awt.Color( 255, 0, 0, 255 )
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
-				"x": 605
-				"y": 675
+				"x": 610
+				"y": 660
 				"width": 120
 				"height": 40
 			} )
@@ -109,18 +109,18 @@ new FormModel {
 				"background": new java.awt.Color( 255, 255, 255, 255 )
 				"foreground": new java.awt.Color( 255, 51, 51, 255 )
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
-				"x": 720
-				"y": 675
+				"x": 715
+				"y": 655
 				"width": 170
 				"height": 45
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "payButton"
-				"text": "结算"
+				"text": "微信二维码支付"
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "payButtonActionPerformed", true ) )
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"x": 330
-				"y": 670
+				"y": 650
 				"width": 135
 				"height": 50
 			} )
@@ -152,9 +152,9 @@ new FormModel {
 				"foreground": new java.awt.Color( 51, 51, 255, 255 )
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"x": 335
-				"y": 410
+				"y": 400
 				"width": 135
-				"height": 70
+				"height": 55
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "label5"
@@ -182,8 +182,8 @@ new FormModel {
 				"text": "从购物车移除"
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "deleteButtonActionPerformed", true ) )
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
-				"x": 465
-				"y": 670
+				"x": 470
+				"y": 650
 				"width": 135
 				"height": 50
 			} )
@@ -226,6 +226,24 @@ new FormModel {
 				"y": 10
 				"width": 95
 				"height": 40
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "paymentCodeButton"
+				"text": "微信付款码支付"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "paymentCodeButtonActionPerformed", true ) )
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"x": 765
+				"y": 710
+				"width": 135
+				"height": 50
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "textField2"
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"x": 335
+				"y": 710
+				"width": 425
+				"height": 50
 			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )
