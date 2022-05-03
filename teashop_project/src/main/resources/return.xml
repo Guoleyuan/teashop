@@ -1,8 +1,0 @@
-<!--扫码支付结果：-->
-<!--        {nonce_str=fmua0HKZNM2rX1Rp,-->
-<!--        device_info=桂电10号店, -->
-<!--        appid=wxd9a46e74fc279fcc,-->
-<!--        sign=1FCA5BB4CCAD85E8BC04009615E7A82DE4189D8C774E00CE73570F7C421F790B,-->
-<!--        err_code=USERPAYING, return_msg=OK, result_code=FAIL, -->
-<!--        err_code_des=需要用户输入支付密码, mch_id=1623889015, -->
-<!--        return_code=SUCCESS}-->

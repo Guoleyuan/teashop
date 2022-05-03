@@ -38,6 +38,7 @@ public class ChangeDiscount extends JFrame {
             int i=discountproductService.changeDiscount(tea);
             if(i==1){
                 JOptionPane.showMessageDialog(null,"修改成功");
+                new Index().searchAllActionPerformed();
             }else {
                 JOptionPane.showMessageDialog(null,"修改失败");
             }

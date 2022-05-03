@@ -14,16 +14,17 @@ import com.guet.service.Impl.ProductServiceImpl;
 import com.guet.service.OrderService;
 import com.guet.service.ProductService;
 import com.guet.util.MyTable;
-import com.guet.util.TimeNumberUtils;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -390,6 +391,9 @@ public class Index extends JFrame {
         }
         preOrderTable.setModel(dmt);
         preOrderTable.invalidate();
+        if (shopCardList.size()==0){
+            label3.setText("");
+        }
 
     }
 
@@ -522,19 +526,19 @@ public class Index extends JFrame {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         label1 = new JLabel();
         scrollPane1 = new JScrollPane();
-        table = new JTable();
+        table = new MyTable();
         searchAll = new JButton();
         textField1 = new JTextField();
         searchSome = new JButton();
         addProduct = new JButton();
         scrollPane2 = new JScrollPane();
-        preOrderTable = new JTable();
+        preOrderTable = new MyTable();
         addShopCart = new JButton();
         label2 = new JLabel();
         label3 = new JLabel();
         payButton = new JButton();
         scrollPane3 = new JScrollPane();
-        orderTable = new JTable();
+        orderTable = new MyTable();
         finishOrderButton = new JButton();
         label4 = new JLabel();
         label5 = new JLabel();
@@ -546,18 +550,71 @@ public class Index extends JFrame {
         refreshButton = new JButton();
         paymentCodeButton = new JButton();
         textField2 = new JTextField();
+        timeLabel = new JLabel();
+        button = new JTextArea(10,5);
+        eventButton = new JButton();
+        textArea = new JTextArea(10,5);
+        submitButton = new JButton();
 
         //======== this ========
         setIconImage(new ImageIcon(getClass().getResource("/imgs/logo.jpg")).getImage());
         setTitle("\u871c\u96ea\u51b0\u57ce");
-        Container contentPane = getContentPane();
+        JPanel contentPane = (JPanel) getContentPane();
         contentPane.setLayout(null);
+
+        contentPane.setOpaque(false);
+
+        //---- button ----   节日名称展示
+        button.setText("");
+        button.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 28));
+        button.setForeground(Color.red);
+        button.setOpaque(false);
+        contentPane.add(button);
+        button.setLineWrap(true);
+        // this.getLayeredPane().add(button);
+        button.setBounds(5,100,300,100);
+
+        //---- eventButton ----   修改节日名称
+        eventButton.setText("添加节日名称");
+        eventButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                submitButton.setVisible(true);
+                textArea.setVisible(true);
+            }
+        });
+        contentPane.add(eventButton);
+        eventButton.setBounds(1430,10,95,40);
+
+        //---- textArea ----   接收节日名称的文本框
+        textArea.setVisible(false);
+        textArea.setAutoscrolls(true);
+        contentPane.add(textArea);
+        textArea.setBounds(1000,540,300,100);
+
+
+        //----  ----   修改节日名称
+        submitButton.setVisible(false);
+        submitButton.setText("提交");
+        submitButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String text = textArea.getText();
+                button.setText(text);
+                submitButton.setVisible(false);
+                textArea.setVisible(false);
+            }
+        });
+        contentPane.add(submitButton);
+        submitButton.setBounds(1300,600,95,40);
+
 
         //---- label1 ----
         label1.setText("text");
         label1.setIcon(new ImageIcon(getClass().getResource("/imgs/index.jpg")));
         contentPane.add(label1);
         label1.setBounds(-5, -95, 335, 910);
+
 
         //======== scrollPane1 ========
         {
@@ -657,7 +714,7 @@ public class Index extends JFrame {
         label5.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 28));
         label5.setForeground(new Color(51, 255, 102));
         contentPane.add(label5);
-        label5.setBounds(1425, 50, 130, 45);
+        label5.setBounds(935, 55, 130, 45);
 
         //---- deleteProductButton ----
         deleteProductButton.setText("\u5220\u9664");
@@ -702,7 +759,15 @@ public class Index extends JFrame {
         paymentCodeButton.setBounds(765, 710, 135, 50);
         contentPane.add(textField2);
         textField2.setBounds(335, 710, 425, 50);
-
+        contentPane.add(timeLabel);
+        timeLabel.setBounds(1200, 60, 405, 40);
+        new Timer(100, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                timeLabel.setText(new SimpleDateFormat("yyyy年MM月dd日 EEEE hh:mm:ss").format(new Date()));
+            }
+        }).start();
+        timeLabel.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 24));
         contentPane.setPreferredSize(new Dimension(1590, 795));
         pack();
         setLocationRelativeTo(getOwner());
@@ -741,6 +806,12 @@ public class Index extends JFrame {
     private JButton refreshButton;
     private JButton paymentCodeButton;
     private JTextField textField2;
+    private JLabel timeLabel;
+    private JTextArea button;
+    private JButton eventButton;
+    private JTextArea textArea;
+    private JButton submitButton;
+
     // JFormDesigner - End of variables declaration  //GEN-END:variables
     public static void main(String[] args) {
         Index index = new Index();
