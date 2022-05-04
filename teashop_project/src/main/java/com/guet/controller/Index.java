@@ -481,14 +481,15 @@ public class Index extends JFrame {
             order.setOrderNumber(WXPayUtil.generateNonceStr());
             order.setOrderPrice(price);
             order.setOrderName(JSON.toJSONString(names));
-            order.setOrderStatus(0);
+            order.setMchId(1623889015);
+
 
             try {
-                String returnStatus = WXPay.scanCodeToPay(auth_code, order);
+                String returnStatus = WXPay.scanCodeToPay(auth_code, order,shopCardList);
                 if ("SUCCESS".equals(returnStatus)){
 
-                    orderService.shopCardPay(order,shopCardList);
-
+                    // orderService.shopCardPay(order,shopCardList);
+                    JOptionPane.showMessageDialog(null,"支付成功");
 
                     //清空购物车
                     clearShopCardList();

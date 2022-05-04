@@ -8,7 +8,9 @@ import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import com.guet.entity.Order;
+import com.guet.entity.Tea;
 import com.guet.sdk.WXPayUtil;
+import com.guet.service.Impl.OrderServiceImpl;
 import com.guet.util.DateUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -20,6 +22,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class WXPay {
@@ -42,7 +46,7 @@ public class WXPay {
      *
      * @throws Exception
      */
-    public static String scanCodeToPay(String auth_code,Order order) throws Exception {
+    public static String scanCodeToPay(String auth_code,Order order,List<Tea> shopCartList) throws Exception {
         InetAddress addr = null;
         try {
             addr = InetAddress.getLocalHost();
@@ -89,6 +93,9 @@ public class WXPay {
         String result_code = null;
         String err_code_des = null;
         String err_code = null;
+        String transaction_id=null;
+        String time_end=null;
+        Timestamp timestamp=null;
         //获取Document对象（主要是获取支付接口的返回信息）
         Document doc = DocumentHelper.parseText(mapToXml);
         //获取对象的根节点<xml>
@@ -106,8 +113,23 @@ public class WXPay {
                 err_code = element.getTextTrim();
             }
         }
+        for (Element element : elements) {
+            if (element.getName().equals("transaction_id")) {
+                transaction_id = element.getTextTrim();
+            }
+            if (element.getName().equals("time_end")) {
+                time_end = element.getTextTrim();
+            }
+        }
+        if (transaction_id!=null&&time_end!=null){
+            order.setTransactionId(transaction_id);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+            timestamp = new Timestamp(sdf.parse(time_end).getTime());
+            order.setOrderTime(timestamp);
+        }
         if (PAY_SUCCESS.equals(return_code) && PAY_SUCCESS.equals(result_code)) {
             log.info("微信免密支付成功！");
+            new OrderServiceImpl().shopCardPay(order,shopCartList);
             return PAY_SUCCESS;
         } else if (PAY_USERPAYING.equals(err_code)) {
             for (int i = 0; i < 4; i++) {
@@ -128,9 +150,23 @@ public class WXPay {
                     if (element.getName().equals("trade_state")) {
                         trade_state = element.getTextTrim();
                     }
+                    if (element.getName().equals("transaction_id")) {
+                        transaction_id = element.getTextTrim();
+                    }
+                    if (element.getName().equals("time_end")) {
+                        time_end = element.getTextTrim();
+                    }
                 }
+                if (transaction_id!=null&&time_end!=null){
+                    order.setTransactionId(transaction_id);
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+                    timestamp = new Timestamp(sdf.parse(time_end).getTime());
+                    order.setOrderTime(timestamp);
+                }
+
                 if (PAY_SUCCESS.equals(trade_state)) {
                     log.info("微信加密支付成功！");
+                    new OrderServiceImpl().shopCardPay(order,shopCartList);
                     return PAY_SUCCESS;
                 }
                 log.info("正在支付" + orderResp);
