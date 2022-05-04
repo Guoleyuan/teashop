@@ -97,9 +97,10 @@ public class OrderServiceImpl implements OrderService {
                 }
             }
             for (String s : map.keySet()) {
-                goods.add(new Goods(s,String.valueOf(productDao.searchPriceByName(s)),
+                goods.add(new Goods(s,
+                        String.valueOf(productDao.searchPriceByName(s)),
                         String.valueOf(map.get(s)),
-                        String.valueOf(order.getOrderPrice()),
+                        String.valueOf(productDao.searchPriceByName(s)*map.get(s)),
                         productDao.searchCountByName(s)==1? "暂无折扣":String.valueOf(productDao.searchCountByName(s))
                         ));
             }

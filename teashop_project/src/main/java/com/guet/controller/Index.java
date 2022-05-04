@@ -4,12 +4,10 @@
 package com.guet.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.guet.dao.Impl.ProductDaoImpl;
 import com.guet.entity.Order;
 import com.guet.entity.Tea;
 import com.guet.enums.TeaStatus;
 import com.guet.pay.WXPay;
-import com.guet.print.Goods;
 import com.guet.sdk.WXPayUtil;
 import com.guet.service.Impl.OrderServiceImpl;
 import com.guet.service.Impl.ProductServiceImpl;
@@ -27,7 +25,6 @@ import java.awt.event.FocusEvent;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -262,6 +259,9 @@ public class Index extends JFrame {
 
 
 
+
+
+
             WXPay.unifiedOrder(order);
 
             new CodePay();
@@ -277,18 +277,6 @@ public class Index extends JFrame {
             label3.setText(" ");
             //把数据放到当前订单中  就是查询订单表中的所有order_status为0的值
 
-
-            try {
-                Thread.sleep(3000);
-
-                //刷新订单表
-                refreshCurrentOrder();
-                //刷新商品表
-                searchAllActionPerformed();
-
-            } catch (InterruptedException ex) {
-                ex.printStackTrace();
-            }
 
         }
 
