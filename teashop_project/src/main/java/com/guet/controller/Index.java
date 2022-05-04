@@ -521,6 +521,14 @@ public class Index extends JFrame {
 
     }
 
+    /**
+     * 导出销售数据的按钮
+     * */
+    private void exportDataActionPerformed(ActionEvent e) {
+        // TODO add your code here
+        new ExportData();
+    }
+
 
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
@@ -555,6 +563,7 @@ public class Index extends JFrame {
         eventButton = new JButton();
         textArea = new JTextArea(10,5);
         submitButton = new JButton();
+        exportData = new JButton();
 
         //======== this ========
         setIconImage(new ImageIcon(getClass().getResource("/imgs/logo.jpg")).getImage());
@@ -768,6 +777,14 @@ public class Index extends JFrame {
             }
         }).start();
         timeLabel.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 24));
+
+        //---- exportData ----
+        exportData.setText("\u5bfc\u51fa\u9500\u552e\u6570\u636e");
+        exportData.addActionListener(e -> exportDataActionPerformed(e));
+        contentPane.add(exportData);
+        exportData.setBounds(1160, 435, 125, 50);
+
+
         contentPane.setPreferredSize(new Dimension(1590, 795));
         pack();
         setLocationRelativeTo(getOwner());
@@ -812,6 +829,7 @@ public class Index extends JFrame {
     private JButton eventButton;
     private JTextArea textArea;
     private JButton submitButton;
+    private JButton exportData;
 
     // JFormDesigner - End of variables declaration  //GEN-END:variables
     public static void main(String[] args) {

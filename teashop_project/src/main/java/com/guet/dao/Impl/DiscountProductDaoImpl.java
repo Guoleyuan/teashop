@@ -1,6 +1,7 @@
 package com.guet.dao.Impl;
 
 import com.guet.dao.DiscountProductDao;
+import com.guet.entity.Order;
 import com.guet.entity.Tea;
 import com.guet.util.ConnUtil;
 import com.guet.util.ConnectionHandler;
@@ -8,6 +9,7 @@ import com.guet.util.ConnectionHandler;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -81,6 +83,34 @@ public class DiscountProductDaoImpl implements DiscountProductDao {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return list;
+    }
+    @Override
+    public List<Order> exportData(String start, String end) {
+        List<Order> list=new ArrayList<>();
+        try {
+            conn=ConnectionHandler.getConnection();
+            String sql="SELECT *" +
+                    "FROM tea_order " +
+                    "WHERE (order_status=1 and order_Time BETWEEN '"+start+"' AND '"+end+"')";
+            psm= conn.prepareStatement(sql);
+            rs= psm.executeQuery();
+            while (rs.next()){
+                Order order=new Order();
+                order.setOrderNumber(rs.getString("order_number"));
+                order.setOrderPrice(rs.getFloat("order_price"));
+                order.setOrderName(rs.getString("order_name"));
+                order.setOrderStatus(rs.getInt("order_status"));
+                order.setOrderTime(rs.getTimestamp("order_Time"));
+                order.setOrderId(rs.getInt("order_id"));
+                order.setMchId(rs.getInt("mch_id"));
+                order.setTransactionId(rs.getString("transaction_id"));
+                list.add(order);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
         return list;
     }
 

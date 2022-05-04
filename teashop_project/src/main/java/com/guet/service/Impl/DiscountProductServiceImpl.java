@@ -2,6 +2,7 @@ package com.guet.service.Impl;
 
 import com.guet.dao.DiscountProductDao;
 import com.guet.dao.Impl.DiscountProductDaoImpl;
+import com.guet.entity.Order;
 import com.guet.entity.Tea;
 import com.guet.service.DiscountProductService;
 
@@ -30,5 +31,11 @@ public class DiscountProductServiceImpl implements DiscountProductService {
     public List<Tea> activeDiscount() {
         List<Tea> list=productDao.activeDiscount();
         return list;
+    }
+
+    @Override
+    public List<Order> exportData(String start, String end) {
+        List<Order> orders=productDao.exportData(start,end);
+        return orders;
     }
 }
