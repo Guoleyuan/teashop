@@ -783,7 +783,7 @@ public class Index extends JFrame {
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
         this.setVisible(true);
 
-        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setResizable(false);
 
     }

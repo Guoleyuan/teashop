@@ -4,7 +4,7 @@
 
 package com.guet.controller;
 
-import com.alibaba.fastjson.JSONObject;
+
 import com.eltima.components.ui.DatePicker;
 import com.guet.entity.Order;
 import com.guet.service.DiscountProductService;
@@ -14,17 +14,15 @@ import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
+import javax.swing.*;
+import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import javax.swing.*;
-
 
 /**
  * @author 1
@@ -88,7 +86,8 @@ public class ExportData extends JFrame {
             }
         }
 
-        File file=new File("销售数据.xls");
+
+        File file=new File(FileSystemView.getFileSystemView() .getHomeDirectory().getAbsolutePath()+"/销售数据.xls");
         try {
             FileOutputStream fileOutputStream=new FileOutputStream(file);
             wb.write(fileOutputStream);
