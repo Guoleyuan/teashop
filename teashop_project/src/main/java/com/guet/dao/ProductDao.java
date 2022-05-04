@@ -19,4 +19,6 @@ public interface ProductDao {
     float searchPriceByName(String name);
 
     float searchCountByName(String name);
+
+    int searchAmountByName(String name);
 }

@@ -16,6 +16,7 @@ import com.guet.service.ProductService;
 import com.guet.util.MyTable;
 
 import javax.swing.*;
+import javax.swing.Timer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -23,8 +24,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
+import java.util.*;
 import java.util.List;
 
 /**
@@ -185,10 +185,30 @@ public class Index extends JFrame {
             tea.setTeaName((String) table.getValueAt(index1,1));
             tea.setTeaDiscount((Float) table.getValueAt(index1,2));
             tea.setTeaPrice((Float) table.getValueAt(index1,3));
+            
+
             // System.out.println(tea);
             shopCardList.add(tea);
 
-            //把list数据放入到preOrderTable中
+            Map<String, Integer> map = new HashMap<>();
+            for (Tea teas : shopCardList) {
+                if (map.containsKey(teas.getTeaName())){
+                    Integer integer = map.get(tea.getTeaName());
+                    map.put(tea.getTeaName(),++integer);
+                }else {
+                    map.put(tea.getTeaName(),1);
+                }
+            }
+            Set<String> strings = map.keySet();
+            for (String string : strings) {
+                int i = productService.searchAmount(string);
+                if (i-map.get(string)<0){
+                    JOptionPane.showMessageDialog(null,"十分抱歉,"+string+"已经没有了");
+                    return;
+                }
+            }
+
+        //把list数据放入到preOrderTable中
             coin= new String[]{"产品名称","折扣", "单价(元)"};
 
             dmt= new DefaultTableModel(null,coin);

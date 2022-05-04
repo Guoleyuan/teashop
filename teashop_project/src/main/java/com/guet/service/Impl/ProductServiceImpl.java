@@ -78,4 +78,10 @@ public class ProductServiceImpl implements ProductService {
             return false;
         }
     }
+
+    @Override
+    public int searchAmount(String name) {
+        int i = productDao.searchAmountByName(name);
+        return i;
+    }
 }

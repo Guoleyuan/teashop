@@ -174,5 +174,27 @@ public class ProductDaoImpl implements ProductDao {
 
     }
 
+    /**
+     * 查找数量通过name
+     * @param name
+     * @return
+     */
+    @Override
+    public int searchAmountByName(String name) {
+        try {
+            conn=ConnectionHandler.getConnection();
+            String sql="select tea_amount from tea where tea_name=?";
+            psm=conn.prepareStatement(sql);
+            psm.setString(1,name);
+            rs=psm.executeQuery();
+            while (rs.next()){
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
 
 }
