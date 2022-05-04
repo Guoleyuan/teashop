@@ -15,4 +15,8 @@ public interface ProductDao {
     int updateProductAmount(String name) throws SQLException;
 
     boolean deleteProductById(int id);
+
+    float searchPriceByName(String name);
+
+    float searchCountByName(String name);
 }

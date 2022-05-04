@@ -4,10 +4,12 @@
 package com.guet.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.guet.dao.Impl.ProductDaoImpl;
 import com.guet.entity.Order;
 import com.guet.entity.Tea;
 import com.guet.enums.TeaStatus;
 import com.guet.pay.WXPay;
+import com.guet.print.Goods;
 import com.guet.sdk.WXPayUtil;
 import com.guet.service.Impl.OrderServiceImpl;
 import com.guet.service.Impl.ProductServiceImpl;
@@ -25,6 +27,7 @@ import java.awt.event.FocusEvent;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 /**

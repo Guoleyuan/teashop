@@ -135,5 +135,44 @@ public class ProductDaoImpl implements ProductDao {
         return true;
     }
 
+    @Override
+    public float searchPriceByName(String name) {
+        float i=0;
+        try {
+            conn=ConnectionHandler.getConnection();
+            String sql="select tea_price from tea where tea_name=?";
+            psm=conn.prepareStatement(sql);
+            psm.setString(1,name);
+            rs= psm.executeQuery();
+            while (rs.next()){
+                i= rs.getFloat(1);
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return i;
+    }
+
+    @Override
+    public float searchCountByName(String name) {
+        float i=1;
+        try {
+            conn=ConnectionHandler.getConnection();
+            String sql="select tea_discount from tea where tea_name=?";
+            psm=conn.prepareStatement(sql);
+            psm.setString(1,name);
+            rs= psm.executeQuery();
+            while (rs.next()){
+                i= rs.getFloat(1);
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return i;
+
+    }
+
 
 }

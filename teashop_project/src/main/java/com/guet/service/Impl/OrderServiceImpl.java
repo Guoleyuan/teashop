@@ -6,12 +6,18 @@ import com.guet.dao.OrderDao;
 import com.guet.dao.ProductDao;
 import com.guet.entity.Order;
 import com.guet.entity.Tea;
+import com.guet.print.Goods;
+import com.guet.print.Printer;
+import com.guet.print.SalesTicket;
 import com.guet.service.OrderService;
 import com.guet.service.ProductService;
 import com.guet.util.ConnectionHandler;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 public class OrderServiceImpl implements OrderService {
@@ -65,13 +71,43 @@ public class OrderServiceImpl implements OrderService {
 
 
             orderDao.insertOrder(order);
+
             //更新商品表，把数量剪掉对应的数目
+            Float price=0.00F;
             for (Tea tea : shopCardList) {
                 String teaName = tea.getTeaName();
+                price += tea.getTeaPrice();
                 productDao.updateProductAmount(teaName);
             }
 
             connection.commit();
+
+
+            //打印小票
+            List<Goods> goods = new ArrayList<Goods>();
+            HashMap<String,Float> map= new HashMap<>();//这里只能string，Integer
+            for(Tea tea:shopCardList){
+                //判断是否有一样的商品，有的话加1，没有的话加进去，并设为1
+                if(map.containsKey(tea.getTeaName())){
+                    Float i=map.get(tea.getTeaName());
+                    System.out.println(map.get(tea.getTeaName()));
+                    map.put(tea.getTeaName(),++i);
+                }else {
+                    map.put(tea.getTeaName(), 1F);
+                }
+            }
+            for (String s : map.keySet()) {
+                goods.add(new Goods(s,String.valueOf(productDao.searchPriceByName(s)),
+                        String.valueOf(map.get(s)),
+                        String.valueOf(order.getOrderPrice()),
+                        productDao.searchCountByName(s)==1? "暂无折扣":String.valueOf(productDao.searchCountByName(s))
+                        ));
+            }
+            int size = goods.size();
+            SalesTicket salesTicket = new SalesTicket(goods, order.getOrderNumber(), String.valueOf(size), String.valueOf(price), String.valueOf(order.getOrderPrice()), "0", new Date());
+            Printer printer = new Printer(salesTicket);
+            printer.printer();
+
 
         } catch (Exception e) {
             e.printStackTrace();
