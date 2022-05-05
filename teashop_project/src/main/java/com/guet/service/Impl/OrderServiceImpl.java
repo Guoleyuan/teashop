@@ -6,11 +6,10 @@ import com.guet.dao.OrderDao;
 import com.guet.dao.ProductDao;
 import com.guet.entity.Order;
 import com.guet.entity.Tea;
-import com.guet.print.Goods;
+import com.guet.entity.Goods;
 import com.guet.print.Printer;
 import com.guet.print.SalesTicket;
 import com.guet.service.OrderService;
-import com.guet.service.ProductService;
 import com.guet.util.ConnectionHandler;
 
 import java.sql.Connection;

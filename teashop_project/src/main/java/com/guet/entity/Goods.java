@@ -1,4 +1,4 @@
-package com.guet.print;
+package com.guet.entity;
 
 public class Goods {
     private String gname; //商品名称

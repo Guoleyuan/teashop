@@ -5,6 +5,7 @@
 package com.guet.controller;
 
 
+import com.alibaba.fastjson.JSON;
 import com.eltima.components.ui.DatePicker;
 import com.guet.entity.Order;
 import com.guet.service.DiscountProductService;
@@ -22,7 +23,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author 1
@@ -63,13 +66,25 @@ public class ExportData extends JFrame {
             for(int j=0;j< coin.length;j++){
                 HSSFCell cell= row.createCell(j);
                 if(j==0){
-                    cell.setCellValue(order.getOrderNumber());
+                    cell.setCellValue(String.valueOf(order.getOrderNumber()));
                 }else if (j==1){
-                    cell.setCellValue(order.getOrderPrice());
+                    cell.setCellValue(String.valueOf(order.getOrderPrice()));
                 }else if (j==2){
-                    cell.setCellValue(order.getOrderName());
+                    String orderName = order.getOrderName();
+                    List<String> list1 = JSON.parseArray(orderName, String.class);
+                    Map<String, Integer> map = new HashMap<>();
+                    for (String s : list1) {
+                        if (map.containsKey(s)){
+                            Integer integer = map.get(s);
+                            map.put(s,++integer);
+                        }else {
+                            map.put(s,1);
+                        }
+                    }
+                    String s = JSON.toJSONString(map);
+                    cell.setCellValue(s);
                 }else if (j==3){
-                    cell.setCellValue(order.getOrderTime());
+                    cell.setCellValue(String.valueOf(order.getOrderTime()));
                 }else if (j==4){
                     if(order.getOrderStatus()==1){
                         cell.setCellValue("已完成订单");
@@ -77,11 +92,11 @@ public class ExportData extends JFrame {
                         cell.setCellValue("未完成订单");
                     }
                 }else if (j==5){
-                    cell.setCellValue(order.getOrderId());
+                    cell.setCellValue(String.valueOf(order.getOrderId()));
                 }else if (j==6){
-                    cell.setCellValue(order.getMchId());
+                    cell.setCellValue(String.valueOf(order.getMchId()));
                 }else if (j==7){
-                    cell.setCellValue(order.getTransactionId());
+                    cell.setCellValue(String.valueOf(order.getTransactionId()));
                 }
             }
         }
