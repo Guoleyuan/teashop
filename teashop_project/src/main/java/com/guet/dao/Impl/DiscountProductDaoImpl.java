@@ -114,6 +114,35 @@ public class DiscountProductDaoImpl implements DiscountProductDao {
         return list;
     }
 
+    @Override
+    public List<Order> exportData() {
+        List<Order> list=new ArrayList<>();
+        try {
+            conn=ConnectionHandler.getConnection();
+            String sql="SELECT *" +
+                    "FROM tea_order " +
+                    "WHERE order_status=1 ORDER BY order_time ASC";
+            psm= conn.prepareStatement(sql);
+            rs= psm.executeQuery();
+            while (rs.next()){
+                Order order=new Order();
+                order.setOrderNumber(rs.getString("order_number"));
+                order.setOrderPrice(rs.getFloat("order_price"));
+                order.setOrderName(rs.getString("order_name"));
+                order.setOrderStatus(rs.getInt("order_status"));
+                order.setOrderTime(rs.getTimestamp("order_Time"));
+                order.setOrderId(rs.getInt("order_id"));
+                order.setMchId(rs.getInt("mch_id"));
+                order.setTransactionId(rs.getString("transaction_id"));
+                list.add(order);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
     public static void main(String[] args) {
         DiscountProductDaoImpl discountProductDao=new DiscountProductDaoImpl();
         discountProductDao.activeDiscount();

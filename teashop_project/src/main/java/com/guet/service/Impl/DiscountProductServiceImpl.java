@@ -38,4 +38,10 @@ public class DiscountProductServiceImpl implements DiscountProductService {
         List<Order> orders=productDao.exportData(start,end);
         return orders;
     }
+
+    @Override
+    public List<Order> exportData() {
+        List<Order> orders=productDao.exportData();
+        return orders;
+    }
 }

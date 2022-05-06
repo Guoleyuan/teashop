@@ -10,4 +10,5 @@ public interface DiscountProductDao {
     int changeDiscount(Tea tea);
     List<Tea> activeDiscount();
     List<Order> exportData(String start, String end);
+    List<Order> exportData();
 }

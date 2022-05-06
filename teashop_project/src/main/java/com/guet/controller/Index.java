@@ -408,17 +408,7 @@ public class Index extends JFrame {
 
     }
 
-    /**
-     * 查看订单详情
-     * @param e
-     */
-    private void detailButtonActionPerformed(ActionEvent e) {
-        // TODO add your code here
-        int selectedRow = orderTable.getSelectedRow();
-        String value = (String) orderTable.getValueAt(selectedRow, 1);
-        new OrderDetail(value);
 
-    }
 
 
 
@@ -540,6 +530,13 @@ public class Index extends JFrame {
         // TODO add your code here
         new ExportData();
     }
+    /**
+     * 查询历史订单按钮
+     * */
+    private void historyActionPerformed(ActionEvent e) {
+        // TODO add your code here
+        new History();
+    }
 
 
     private void initComponents() {
@@ -576,6 +573,8 @@ public class Index extends JFrame {
         textArea = new JTextArea(10,5);
         submitButton = new JButton();
         exportData = new JButton();
+        history = new JButton();
+
 
         //======== this ========
         setIconImage(new ImageIcon(getClass().getResource("/imgs/logo.jpg")).getImage());
@@ -796,6 +795,12 @@ public class Index extends JFrame {
         contentPane.add(exportData);
         exportData.setBounds(1160, 435, 125, 50);
 
+        //---- history ----
+        history.setText("\u5386\u53f2\u8ba2\u5355");
+        history.addActionListener(e -> historyActionPerformed(e));
+        contentPane.add(history);
+        history.setBounds(1020, 435, 125, 50);
+
 
         contentPane.setPreferredSize(new Dimension(1590, 795));
         pack();
@@ -842,6 +847,7 @@ public class Index extends JFrame {
     private JTextArea textArea;
     private JButton submitButton;
     private JButton exportData;
+    private JButton history;
 
     // JFormDesigner - End of variables declaration  //GEN-END:variables
     public static void main(String[] args) {
