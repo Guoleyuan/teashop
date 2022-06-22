@@ -71,7 +71,6 @@ public class AddProduct extends JFrame {
             tea.setTeaPrice(Float.parseFloat(addTextField3.getText()));
             tea.setTeaCategory(addTextField4.getText());
             tea.setTeaAmount(Integer.parseInt(addTextField5.getText()));
-            System.out.println(tea);
             int i = productService.insertProduct(tea);
             if (i==1){
                 JOptionPane.showMessageDialog(null,"添加成功");
